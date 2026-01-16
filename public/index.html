@@ -23,6 +23,7 @@
             --slate-light: #ccd6f6;
             --slate-dark: #8892b0;
             --brand-primary: #64ffda;
+            --prd-accent: #bb9af7;
         }
         html { scroll-behavior: smooth; }
         body {
@@ -37,7 +38,9 @@
         h4 { font-size: 1rem; margin-top: 0.75rem; margin-bottom: 0.35rem; color: var(--brand-primary); }
         .brand-text { color: var(--brand-primary); }
         .wrapper { display: flex; }
-        #side-nav { width: 280px; height: 100vh; overflow-y: auto; background-color: var(--bg-light); padding: 2rem; position: fixed; border-right: 1px solid #233554; }
+        #side-nav { width: 280px; height: 100vh; overflow: hidden; background-color: var(--bg-light); padding: 2rem; position: fixed; border-right: 1px solid #233554; display: flex; flex-direction: column; }
+        #side-nav-scroll { overflow-y: auto; flex: 1 1 auto; padding-right: 0.5rem; margin-right: -0.5rem; }
+        #side-nav-bottom { flex: 0 0 auto; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #233554; }
         #main-content { margin-left: 280px; width: calc(100% - 280px); padding: 3rem 4rem; }
         #main-content > section { margin-top: 2rem; }
         #main-content > section:first-child { margin-top: 0; }
@@ -46,6 +49,8 @@
         .nav-link { display: flex; align-items: center; gap: 1rem; padding: 0.6rem 0; color: var(--slate-dark); font-weight: 500; text-decoration: none; border-left: 3px solid transparent; padding-left: 1.5rem; transition: all 0.3s ease; }
         .nav-link:hover { color: var(--brand-primary); border-left-color: var(--brand-primary); }
         .nav-link.active { color: var(--slate-light); border-left-color: var(--brand-primary); }
+        .nav-link-prd:hover { color: var(--prd-accent); border-left-color: var(--prd-accent); }
+        .nav-link-prd.active { color: var(--slate-light); border-left-color: var(--prd-accent); background: rgba(187, 154, 247, 0.08); }
         .card { background-color: var(--bg-light); border: 1px solid #233554; padding: 1.25rem; border-radius: 8px; }
         .table-wrapper { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; margin-top: 0.75rem; }
@@ -73,11 +78,11 @@
         a.inline { color: var(--brand-primary); text-decoration: underline; }
 
         /* Sidebar scrollbar styling */
-        #side-nav { scrollbar-gutter: stable; }
-        #side-nav::-webkit-scrollbar { width: 10px; }
-        #side-nav::-webkit-scrollbar-track { background: #0b1f3a; }
-        #side-nav::-webkit-scrollbar-thumb { background: #233554; border-radius: 999px; border: 2px solid #0b1f3a; }
-        #side-nav::-webkit-scrollbar-thumb:hover { background: #2f476d; }
+        #side-nav-scroll { scrollbar-gutter: stable; }
+        #side-nav-scroll::-webkit-scrollbar { width: 10px; }
+        #side-nav-scroll::-webkit-scrollbar-track { background: #0b1f3a; }
+        #side-nav-scroll::-webkit-scrollbar-thumb { background: #233554; border-radius: 999px; border: 2px solid #0b1f3a; }
+        #side-nav-scroll::-webkit-scrollbar-thumb:hover { background: #2f476d; }
 
         /* Markdown rendering tweaks */
         .md h1, .md h2, .md h3, .md h4 { border-bottom: none; margin-top: 0.75rem; }
@@ -106,6 +111,11 @@
         .token.string { color: #9ece6a; }
         .token.function { color: #bb9af7; }
         .token.number { color: #ff9e64; }
+
+        /* PRD styling */
+        .prd-card { border-color: rgba(187, 154, 247, 0.35); box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+        .prd-badge { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--prd-accent); background: rgba(187, 154, 247, 0.10); border: 1px solid rgba(187, 154, 247, 0.25); padding: 0.35rem 0.6rem; border-radius: 999px; }
+        .prd-divider { border-top: 1px dashed rgba(187, 154, 247, 0.35); margin: 1rem 0; }
     </style>
 </head>
 <body>
@@ -136,18 +146,25 @@
 
     <div class="wrapper content-hidden" id="main-wrapper">
         <nav id="side-nav">
-            <div class="logo">
-                <img src="https://triple2digital.com/wp-content/uploads/2018/07/TRIPLE2_LOGO_WHITE_DONE_RETINA.png" alt="Triple2 Digital Logo" class="w-40">
+            <div id="side-nav-scroll">
+                <div class="logo">
+                    <img src="https://triple2digital.com/wp-content/uploads/2018/07/TRIPLE2_LOGO_WHITE_DONE_RETINA.png" alt="Triple2 Digital Logo" class="w-40">
+                </div>
+                <p class="text-sm mt-2 mb-8">Secure Deliverables for <br/><strong>Thrive Summit</strong></p>
+
+                <a href="#overview" class="nav-link">Overview</a>
+                <a href="#deliverablesIndex" class="nav-link">Deliverables Index</a>
+                <a href="#architectureDiagrams" class="nav-link">Architecture Diagrams</a>
+                <a href="#codeExamples" class="nav-link">Code Examples</a>
+                <div class="mt-6 mb-2 text-xs uppercase tracking-widest text-slate-400">Documents</div>
+
+                <div id="nav-docs"></div>
             </div>
-            <p class="text-sm mt-2 mb-8">Secure Deliverables for <br/><strong>Thrive Summit</strong></p>
 
-            <a href="#overview" class="nav-link">Overview</a>
-            <a href="#deliverablesIndex" class="nav-link">Deliverables Index</a>
-            <a href="#architectureDiagrams" class="nav-link">Architecture Diagrams</a>
-            <a href="#codeExamples" class="nav-link">Code Examples</a>
-            <div class="mt-6 mb-2 text-xs uppercase tracking-widest text-slate-400">Documents</div>
-
-            <div id="nav-docs"></div>
+            <div id="side-nav-bottom">
+                <div class="mb-2 text-xs uppercase tracking-widest text-slate-400">Platform</div>
+                <a href="#prd" class="nav-link nav-link-prd">PRD</a>
+            </div>
         </nav>
 
         <main id="main-content">
@@ -693,6 +710,18 @@ export function recommendVipTrack(input: {
                     </div>
                 </div>
             </section>
+
+            <section id="prd">
+                <h2>PRD (Product Requirements Document)</h2>
+                <div class="card prd-card">
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="prd-badge">PRD • Thrive Platform</div>
+                        <div class="note text-sm">Source: two January 12, 2026 recordings (Amber + discovery)</div>
+                    </div>
+                    <div class="prd-divider"></div>
+                    <div class="md" id="prd-md"></div>
+                </div>
+            </section>
         </main>
     </div>
 
@@ -709,6 +738,16 @@ export function recommendVipTrack(input: {
                 .toLowerCase()
                 .replace(/[^a-z0-9]+/g, '-')
                 .replace(/(^-|-$)/g, '');
+        }
+
+        const prdMd = `## 1) Summary\n\n**Vision**: Change the way dentistry operates by helping practices deliver better soft tissue care (gingivitis/periodontitis) while solving the operational reality: a hygiene shortage and schedule capacity constraints.\n\n**Platform thesis**: Use Thrive’s education + events as the top-of-funnel, then convert into team coaching, practice implementation, and long-term outcomes — supported by a HIPAA-safe data layer and sponsor measurement.\n\n---\n\n## 2) Product ecosystem (offer stack)\n\n- **Thrive App**: on-demand learning platform for dental hygienists and dental professionals (clinical + business). Goal: elevate providers so they can drop into any office and understand how it runs.\n- **Thrive Summit**: flagship team event to install a heart-forward, evidence-based soft tissue management program (not insurance-led).\n- **Thrive Together**: post-Summit (or standalone) on-demand team coaching: patient journey, language patterns, protocol consistency, closing outstanding treatment plans.\n- **Fractional Hygiene Director**: higher-touch practice implementation + accountability, driven by KPI review and team coaching.\n- **Sponsors / KOL**: corporate partners, stage/podium integration, tracked activations, measurable non-PHI reporting.\n\n---\n\n## 3) Problem statement\n\nFrom the recordings:\n\n- **Clinical + business gap**: In a typical patient population, a large portion of patients have soft tissue disease, but practices commonly **bill/treat a small fraction** (Amber cites ~80% prevalence vs ~10% billed).\n- **Capacity paradox**: When a practice improves diagnosis and case acceptance, **demand increases**, but with hygiene booked out, there’s **nowhere to schedule** appropriate care (e.g., 2 visits/year becomes 6+).\n- **Hygiene shortage**: Amber cites **1 in 12 hygienists** leaving the industry after COVID, creating widespread staffing gaps.\n- **Insurance-led behavior**: Practices allow insurance to dictate care, reducing the quality of recommendations and lowering compliance.\n- **Protocol + communication inconsistency**: turnover and lack of training causes teams to normalize disease and avoid standardization.\n\n---\n\n## 4) Goals and outcomes\n\n### Business goals\n- Increase qualified leads from lectures, associations, social, and partners.\n- Convert leads into Summit registrations (especially Team Pass) and VIP Track applications.\n- Scale Thrive Together and Fractional retainer conversions.\n- Build sponsor packages with measurable reporting to increase recurring sponsorship revenue.\n\n### Patient and practice outcomes\n- Improve patient compliance through evidence-based education + consistent language patterns.\n- Install soft tissue management protocols that are operationally deliverable.\n- Reduce “diagnosis fear” by pairing clinical improvement with capacity solutions (e.g., perioblocks, triage rules, assisted hygiene where appropriate).\n\n### Success metrics (examples)\n- Funnel: opt-ins → triage scheduled → summit registered → attended → VIP app submitted → VIP closed → converted to fractional.\n- Practice KPIs (aggregate/non-PHI): perio diagnosis %, perio treatment started %, pre-appoint %, re-care kept %, weeks booked out.\n- Sponsor KPIs (non-PHI): QR opt-in leads, tracked links/codes conversions, survey attribution, post-event report completion.\n\n---\n\n## 5) Target users (personas)\n\n- **Dental hygienist**: wants clinical confidence, communication scripts, efficiency, career growth/certification.\n- **Practice owner / dentist**: wants better patient care and sustainable revenue without breaking schedule; wants a clear operating system.\n- **Office manager (OM)**: needs systems, reporting, consistent handoffs, and playbooks to reduce chaos.\n- **Sponsor / brand partner**: wants measurable, compliant activations (leads + conversions) and trusted educational integration.\n\n---\n\n## 6) Key user journeys\n\n### Journey A — Lecture → newsletter → Summit\n1) Amber lectures at association/event\n2) QR capture / opt-in\n3) Lead nurture (email/newsletter)\n4) Summit registration (individual or team pass)\n5) On-site conversion: VIP application + owner strategy session booking\n\n### Journey B — Summit → VIP → Fractional\n1) Attended Summit\n2) VIP track application submitted (capacity vs implementation vs fractional)\n3) VIP fit call\n4) Track delivery (A/B/C)\n5) Convert to Fractional for sustained accountability\n\n### Journey C — Sponsor lifecycle\n1) Target list + outreach\n2) Discovery call → package selection\n3) Activation planning\n4) Summit + content activations (QR/codes/links)\n5) Reporting + renewal\n\n---\n\n## 7) Product scope (MVP)\n\n### MVP 1 — Acquisition + qualification system\n- QR landing pages (resources opt-in, VIP application, owner session booking)\n- Lead capture + source attribution\n- Qualification routing (capacity vs acceptance/protocols vs accountability)\n- CRM sync (HubSpot or Pipedrive)\n\n### MVP 2 — Summit operations + conversion\n- Ticketing integration (checkout + confirmations)\n- Attendee check-in + attendance marking\n- VIP application workflow + routing\n- Task creation for follow-up sequences\n\n### MVP 3 — Practice accountability (Fractional)\n- Secure portal for leadership\n- KPI scorecard submission (aggregate only) + weekly review workflow\n- Action items, notes, and accountability cadence\n\n### MVP 4 — Sponsor reporting\n- Tracked link/code generation\n- QR lead export\n- Post-event sponsor report generator (non-PHI)\n\n---\n\n## 8) Functional requirements (detailed)\n\n### Lead capture + attribution\n- Store: contact info, role, practice info (optional), source, event/association identifier.\n- Deduplicate by email.\n- Support multiple entry points: lecture QR, IG, podcast, partner brands.\n\n### Qualification + routing\n- Collect constraint and basic capacity signal (weeks booked out).\n- Route to next best step:\n  - Summit individual\n  - Summit team pass\n  - Thrive Together\n  - VIP Track A/B/C application\n\n### Content + learning (Thrive App)\n- Content library (modules, workbooks, “coding books,” templates).\n- Certification flows: track progress, quizzes/attestations, completion certificates.\n\n### Thrive Together coaching\n- Cohort/calendar scheduling\n- Resource library\n- Attendance + implementation tracking (lightweight)\n\n### Fractional Hygiene Director\n- Client dashboard with aggregate KPIs, meeting cadence, tasks\n- Controlled access: role-based permissions\n\n### Sponsor / KOL\n- Sponsor package catalog + inventory\n- Lead exports + reporting\n- Compliance guardrails: no PHI in sponsor reporting\n\n---\n\n## 9) Non-functional requirements\n\n- **HIPAA + privacy**: default to aggregated/de-identified KPI reporting. If any PHI is ever required, it must be covered by a proper BAA and “minimum necessary” access.\n- **Security**: authentication, RBAC, audit logs for access to practice dashboards.\n- **Reliability**: low operational overhead; safe migrations; predictable deploys.\n- **Performance**: fast landing pages (QR scans are impatient).\n\n---\n\n## 10) Data and compliance model (high level)\n\n- Data entities: Lead, Practice, PipelineStage, Event, Ticket, Attendance, VipApplication, Engagement (ThriveTogether/Fractional), Sponsor, Activation, AttributionEvent, KpiAggregate.\n- Data boundaries:\n  - Sponsor reporting: links/codes/opt-in leads/surveys only (non-PHI).\n  - Practice outcomes: aggregate KPIs preferred (no patient identifiers).\n\n---\n\n## 11) Integrations\n\n- CRM: HubSpot (preferred) or Pipedrive\n- Email/newsletter: HubSpot, Mailchimp, or ConvertKit\n- Payments/ticketing: Stripe (tickets, team passes, VIP deposits)\n- Scheduling: Calendly (owner sessions, VIP fit calls)\n- Forms: native forms (recommended) or Typeform ingestion\n\n---\n\n## 12) Roadmap (suggested)\n\n- **Phase 0**: unify capture (QR pages) + CRM pipeline + follow-up sequences\n- **Phase 1**: Summit conversion tooling (check-in, VIP app, owner sessions)\n- **Phase 2**: Fractional portal + KPI cadence\n- **Phase 3**: Sponsor portal + reporting + renewal\n\n---\n\n## 13) Risks + open questions\n\n- How to operationalize “assisted hygiene” at scale (training, staffing, adoption)?\n- What minimum KPI set is needed to be useful while staying HIPAA-safe?\n- Which certifications matter most to the market (what’s the “gold standard” outcome)?\n- Data permissions: when/how do practices allow KPI exports; what’s the preferred intake path?\n`;
+
+        function renderPRD() {
+            const prdContainer = document.getElementById('prd-md');
+            if (!prdContainer) return;
+            const rawHtml = marked.parse(prdMd, { gfm: true, breaks: true });
+            const cleanHtml = DOMPurify.sanitize(rawHtml, { ADD_ATTR: ['target'] });
+            prdContainer.innerHTML = cleanHtml;
         }
 
         // Deliverables: embedded from local markdown files
@@ -2315,6 +2354,7 @@ If your “additional appointments/week needed” is:
             document.getElementById('login-overlay').style.display = 'none';
             document.getElementById('main-wrapper').classList.remove('content-hidden');
             renderDeliverables();
+            renderPRD();
             initializeScrollSpy();
             initializeCodeEmbeds();
             window.addEventListener('DOMContentLoaded', function() { setTimeout(initializeMermaid, 100); });
@@ -2331,6 +2371,7 @@ If your “additional appointments/week needed” is:
                 document.getElementById('login-overlay').style.display = 'none';
                 document.getElementById('main-wrapper').classList.remove('content-hidden');
                 renderDeliverables();
+                renderPRD();
                 initializeScrollSpy();
                 initializeCodeEmbeds();
                 setTimeout(initializeMermaid, 100);
