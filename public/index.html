@@ -116,6 +116,7 @@
             <a href="#overview" class="nav-link">Overview</a>
             <a href="#deliverablesIndex" class="nav-link">Deliverables Index</a>
             <a href="#architectureDiagrams" class="nav-link">Architecture Diagrams</a>
+            <a href="#codeExamples" class="nav-link">Code Examples</a>
             <div class="mt-6 mb-2 text-xs uppercase tracking-widest text-slate-400">Documents</div>
 
             <div id="nav-docs"></div>
@@ -465,6 +466,181 @@ flowchart LR
             </section>
 
             <div id="doc-sections"></div>
+
+            <section id="codeExamples">
+                <h2>Code Examples (recommended stack + how it complements the platform)</h2>
+
+                <div class="card">
+                    <h3>Recommended tech stack (production-ready)</h3>
+                    <div class="grid md:grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <h4>Frontend</h4>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li><strong>Next.js (App Router) + TypeScript</strong> for fast pages + server actions/routes</li>
+                                <li><strong>Tailwind CSS</strong> for consistent UI (matches this doc)</li>
+                                <li><strong>Vercel/Render static</strong> for marketing pages; app can run on Render</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>Backend + data</h4>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li><strong>Postgres</strong> (Render Postgres) for leads, tickets, VIP apps, sponsor inventory</li>
+                                <li><strong>Prisma</strong> for schema + migrations</li>
+                                <li><strong>Auth (Clerk or Auth0)</strong> for true protected portals (no client-side passwords)</li>
+                                <li><strong>HubSpot</strong> (or Pipedrive) + webhooks for CRM routing (matches the CRM stages deliverable)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <p class="note mt-3">
+                        How this complements the Thrive Summit platform: it turns the “documents” above into <strong>live flows</strong> (lead capture → qualification → ticketing → VIP application → onboarding → reporting) while keeping data HIPAA-safe via aggregated metrics and clear access boundaries.
+                    </p>
+                </div>
+
+                <div class="card mt-4">
+                    <h3>Example 1 — Lead capture endpoint (Next.js Route Handler)</h3>
+                    <p class="note">Use for: lead magnets, QR opt-in, landing page forms (see “Capture + Qualification Flow”).</p>
+                    <pre><code>// app/api/leads/route.ts
+import { NextResponse } from "next/server";
+import { z } from "zod";
+import { prisma } from "@/lib/prisma";
+
+const LeadSchema = z.object({
+  email: z.string().email(),
+  name: z.string().min(1),
+  role: z.enum(["owner", "dentist", "om", "hygienist", "assistant", "other"]).optional(),
+  source: z.string().min(1), // e.g. "scorecard", "capacity-calculator", "summit-qr"
+});
+
+export async function POST(req: Request) {
+  const json = await req.json();
+  const lead = LeadSchema.parse(json);
+
+  await prisma.lead.upsert({
+    where: { email: lead.email },
+    update: { name: lead.name, role: lead.role, source: lead.source },
+    create: { ...lead },
+  });
+
+  return NextResponse.json({ ok: true });
+}</code></pre>
+                </div>
+
+                <div class="card mt-4">
+                    <h3>Example 2 — Data model (Prisma) that mirrors your CRM stages</h3>
+                    <p class="note">Use for: pipeline stages from “CRM Pipeline + Stages”.</p>
+                    <pre><code>// prisma/schema.prisma
+model Lead {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  email     String   @unique
+  name      String
+  role      String?
+  source    String
+
+  practice  Practice?
+  stage     PracticeStage @default(CAPTURED_LEAD)
+  vipApp    VipApplication?
+}
+
+model Practice {
+  id          String @id @default(cuid())
+  leadId      String @unique
+  lead        Lead   @relation(fields: [leadId], references: [id])
+
+  name        String?
+  city        String?
+  state       String?
+  operatories Int?
+  hygienists  Int?
+}
+
+model VipApplication {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  leadId    String   @unique
+  lead      Lead     @relation(fields: [leadId], references: [id])
+
+  constraint String   // "capacity" | "acceptance" | "protocols" | "accountability"
+  weeksBookedOut Int?
+}
+
+enum PracticeStage {
+  CAPTURED_LEAD
+  ENGAGED
+  TRIAGE_SCHEDULED
+  QUALIFIED_FOR_SUMMIT
+  REGISTERED
+  ATTENDED_SUMMIT
+  VIP_APPLICATION_SUBMITTED
+  VIP_FIT_CALL_COMPLETED
+  CLOSED_WON_VIP
+  DELIVERY
+  CONVERTED_TO_FRACTIONAL
+  ALUMNI
+}</code></pre>
+                </div>
+
+                <div class="card mt-4">
+                    <h3>Example 3 — VIP routing rule (capacity vs implementation vs fractional)</h3>
+                    <p class="note">Use for: mapping “Qualification Flow” → VIP Track A/B/C and creating tasks in CRM.</p>
+                    <pre><code>// lib/routing.ts
+export type Constraint = "capacity" | "acceptance" | "protocols" | "accountability" | "unknown";
+export type VipTrack = "TRACK_A_CAPACITY_SPRINT" | "TRACK_B_IMPLEMENTATION" | "TRACK_C_FRACTIONAL" | "THRIVE_TOGETHER";
+
+export function recommendVipTrack(input: {
+  constraint: Constraint;
+  weeksBookedOut?: number | null;
+  wantsOngoingOversight?: boolean;
+}): VipTrack {
+  if (input.wantsOngoingOversight || input.constraint === "accountability") return "TRACK_C_FRACTIONAL";
+  if (input.constraint === "capacity") return "TRACK_A_CAPACITY_SPRINT";
+  if (input.constraint === "acceptance" || input.constraint === "protocols") return "TRACK_B_IMPLEMENTATION";
+  if ((input.weeksBookedOut ?? 0) >= 6) return "TRACK_A_CAPACITY_SPRINT";
+  return "THRIVE_TOGETHER";
+}</code></pre>
+                </div>
+
+                <div class="card mt-4">
+                    <h3>How this section complements the platform (practical mapping)</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Deliverable in this doc</th>
+                                    <th>Product feature it becomes</th>
+                                    <th>Primary stack pieces</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Capture + Qualification Flow</td>
+                                    <td>Forms + QR landing + routing rules + automation</td>
+                                    <td>Next.js Route Handlers, Postgres, HubSpot API</td>
+                                </tr>
+                                <tr>
+                                    <td>CRM Pipeline + Stages</td>
+                                    <td>Stage transitions + task creation + reporting</td>
+                                    <td>Prisma, Postgres, background jobs (cron)</td>
+                                </tr>
+                                <tr>
+                                    <td>VIP Application Form</td>
+                                    <td>Application intake + track assignment</td>
+                                    <td>Next.js, Zod validation, Auth (Clerk/Auth0)</td>
+                                </tr>
+                                <tr>
+                                    <td>Sponsor inventory + reporting</td>
+                                    <td>Sponsor portal + tracked links/codes + reports</td>
+                                    <td>Postgres, analytics events, PDF/email exports</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
         </main>
     </div>
 
