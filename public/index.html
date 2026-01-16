@@ -1,0 +1,2084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triple2 Digital | Thrive Summit Deliverables</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a192f;
+            --bg-light: #112240;
+            --slate-light: #ccd6f6;
+            --slate-dark: #8892b0;
+            --brand-primary: #64ffda;
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--slate-dark);
+        }
+        h1, h2, h3, h4, strong { color: var(--slate-light); font-weight: 600; }
+        h1 { font-size: 2.2rem; line-height: 1.1; margin-bottom: 1rem; }
+        h2 { font-size: 1.6rem; margin: 1.5rem 0 0.75rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--bg-light); display: flex; align-items: center; gap: 0.5rem; }
+        h3 { font-size: 1.2rem; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+        h4 { font-size: 1rem; margin-top: 0.75rem; margin-bottom: 0.35rem; color: var(--brand-primary); }
+        .brand-text { color: var(--brand-primary); }
+        .wrapper { display: flex; }
+        #side-nav { width: 280px; min-height: 100vh; background-color: var(--bg-light); padding: 2rem; position: fixed; border-right: 1px solid #233554; }
+        #main-content { margin-left: 280px; width: calc(100% - 280px); padding: 3rem 4rem; }
+        #main-content > section { margin-top: 2rem; }
+        #main-content > section:first-child { margin-top: 0; }
+        .logo { font-size: 1.25rem; font-weight: 700; color: var(--slate-light); letter-spacing: 1px; }
+        .logo .brand-text { font-size: 1.5rem; }
+        .nav-link { display: flex; align-items: center; gap: 1rem; padding: 0.6rem 0; color: var(--slate-dark); font-weight: 500; text-decoration: none; border-left: 3px solid transparent; padding-left: 1.5rem; transition: all 0.3s ease; }
+        .nav-link:hover { color: var(--brand-primary); border-left-color: var(--brand-primary); }
+        .nav-link.active { color: var(--slate-light); border-left-color: var(--brand-primary); }
+        .card { background-color: var(--bg-light); border: 1px solid #233554; padding: 1.25rem; border-radius: 8px; }
+        .table-wrapper { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 0.75rem; }
+        th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #233554; }
+        th { color: var(--brand-primary); font-weight: 600; }
+        td { color: var(--slate-dark); }
+        .mermaid { background-color: #ffffff0a; padding: 1rem; border-radius: 8px; margin-top: 1rem; }
+        .btn { display: inline-block; padding: 0.6rem 1.25rem; background-color: var(--brand-primary); color: var(--bg-dark); font-weight: 600; border-radius: 0.375rem; text-decoration: none; transition: all 0.3s ease; }
+        .btn:hover { background-color: #52e0c4; transform: translateY(-2px); }
+
+        /* Login Page Styles */
+        #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-dark); display: flex; align-items: center; justify-content: center; z-index: 9999; }
+        .login-container { background-color: var(--bg-light); padding: 3rem; border-radius: 12px; border: 1px solid #233554; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); max-width: 420px; width: 90%; }
+        .login-logo { text-align: center; margin-bottom: 2rem; }
+        .login-form { display: flex; flex-direction: column; gap: 1.5rem; }
+        .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        .form-label { color: var(--slate-light); font-weight: 500; font-size: 0.875rem; }
+        .form-input { background-color: var(--bg-dark); border: 1px solid #233554; color: var(--slate-light); padding: 0.75rem 1rem; border-radius: 6px; font-size: 1rem; transition: all 0.3s ease; }
+        .form-input:focus { outline: none; border-color: var(--brand-primary); box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.1); }
+        .login-btn { background-color: var(--brand-primary); color: var(--bg-dark); padding: 0.875rem; border: none; border-radius: 6px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; }
+        .login-btn:hover { background-color: #52e0c4; transform: translateY(-2px); }
+        .error-message { color: #ff5f56; font-size: 0.875rem; text-align: center; margin-top: 0.5rem; display: none; }
+        .content-hidden { display: none; }
+        .note { color: #a3b2d6; font-size: 0.9rem; }
+        a.inline { color: var(--brand-primary); text-decoration: underline; }
+
+        /* Markdown rendering tweaks */
+        .md h1, .md h2, .md h3, .md h4 { border-bottom: none; margin-top: 0.75rem; }
+        .md p { margin: 0.5rem 0; }
+        .md ul { list-style: disc; padding-left: 1.25rem; margin: 0.5rem 0; }
+        .md ol { list-style: decimal; padding-left: 1.25rem; margin: 0.5rem 0; }
+        .md li { margin: 0.25rem 0; }
+        .md code { background: #ffffff12; padding: 0.1rem 0.35rem; border-radius: 0.25rem; }
+        .md pre { background: #ffffff12; padding: 1rem; border-radius: 0.5rem; overflow: auto; margin-top: 0.75rem; }
+        .md blockquote { border-left: 3px solid var(--brand-primary); padding-left: 1rem; margin: 0.75rem 0; color: #a3b2d6; }
+        .md hr { border-color: #233554; margin: 1rem 0; }
+    </style>
+</head>
+<body>
+    <!-- Login Overlay -->
+    <div id="login-overlay">
+        <div class="login-container">
+            <div class="login-logo">
+                <img src="https://triple2digital.com/wp-content/uploads/2018/07/TRIPLE2_LOGO_WHITE_DONE_RETINA.png" alt="Triple2 Digital Logo" style="height: 40px; margin: 0 auto;">
+                <h2 style="font-size: 1.5rem; margin-top: 1rem; border: none; padding: 0;">Secure Document Access</h2>
+            </div>
+            <form class="login-form" id="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label" for="username">Username</label>
+                    <input type="text" id="username" class="form-input" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" id="password" class="form-input" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="login-btn">Access Document</button>
+                <div class="error-message" id="error-message">Invalid credentials. Please try again.</div>
+            </form>
+            <div class="login-footer" style="text-align:center; margin-top: 2rem; color: var(--slate-dark); font-size: 0.875rem;">
+                <p style="margin-top: 0.25rem;">© 2026 Triple2 Digital</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="wrapper content-hidden" id="main-wrapper">
+        <nav id="side-nav">
+            <div class="logo">
+                <img src="https://triple2digital.com/wp-content/uploads/2018/07/TRIPLE2_LOGO_WHITE_DONE_RETINA.png" alt="Triple2 Digital Logo" class="w-40">
+            </div>
+            <p class="text-sm mt-2 mb-8">Secure Deliverables for <br/><strong>Thrive Summit</strong></p>
+
+            <a href="#overview" class="nav-link">Overview</a>
+            <a href="#deliverablesIndex" class="nav-link">Deliverables Index</a>
+            <a href="#architectureDiagrams" class="nav-link">Architecture Diagrams</a>
+            <div class="mt-6 mb-2 text-xs uppercase tracking-widest text-slate-400">Documents</div>
+
+            <div id="nav-docs"></div>
+        </nav>
+
+        <main id="main-content">
+            <section id="overview">
+                <h1>Thrive Summit Deliverables (Secure)</h1>
+                <div class="card">
+                    <div class="grid md:grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <h4>What this is</h4>
+                            <p>A single, secure page that contains all Thrive Summit deliverables, rendered from the Markdown files in the Deliverables folder.</p>
+                        </div>
+                        <div>
+                            <h4>How to use</h4>
+                            <p>Use the left navigation to jump to any deliverable, then copy/paste content into your website, slide deck, Typeform, CRM, or email platform.</p>
+                        </div>
+                    </div>
+                    <p class="note mt-3">Source: local Markdown files under <code>/Deliverables</code>.</p>
+                </div>
+            </section>
+
+            <section id="deliverablesIndex">
+                <h2>Deliverables Index</h2>
+                <div class="card">
+                    <div id="index-list" class="text-sm"></div>
+                </div>
+            </section>
+
+            <section id="architectureDiagrams">
+                <h2>Architecture Diagrams</h2>
+                <div class="card">
+                    <p class="note">These diagrams are embedded directly in this secure document and render via Mermaid after authentication.</p>
+                </div>
+
+                <div class="card mt-4">
+                    <h3>Mermaid 1 — End-to-end growth system (Summit-centric)</h3>
+                    <div class="mermaid">
+flowchart TD
+  AttentionSources[AttentionSources] --> CaptureLayer[CaptureLayer]
+  CaptureLayer --> Qualification[Qualification]
+  Qualification --> SummitConversion[SummitConversion]
+  SummitConversion --> OnsiteConversion[OnsiteConversion]
+  OnsiteConversion --> VipTracks[VipTracks]
+  VipTracks --> Retainers[Retainers]
+  Retainers --> ProofEngine[ProofEngine]
+  ProofEngine --> AttentionSources
+
+  subgraph attention [Attention]
+    Lectures[Lectures]
+    Instagram[Instagram]
+    Podcasts[Podcasts]
+    PartnerBrands[PartnerBrands]
+    Associations[Associations]
+  end
+
+  subgraph capture [Capture]
+    LeadMagnetScorecard[LeadMagnetScorecard]
+    LeadMagnetCapacityCalc[LeadMagnetCapacityCalc]
+    NewsletterOptIn[NewsletterOptIn]
+    DmToLink[DmToLink]
+    EventQrCapture[EventQrCapture]
+  end
+
+  subgraph qualify [QualificationAndRouting]
+    TriageCall[TriageCall]
+    FiveQuestionIntake[FiveQuestionIntake]
+    RouteIndividual[RouteIndividualTicket]
+    RouteTeamPass[RouteTeamPass]
+    RouteVipApplicant[RouteVipApplicant]
+  end
+
+  subgraph summit [PublicThriveSummit]
+    TicketIndividual[TicketIndividual]
+    TicketTeamPass[TicketTeamPass]
+    VipApplication[VipApplication]
+    OwnerSession[OwnerSession]
+    SponsorHall[SponsorHall]
+    StageCtas[StageCTAs]
+  end
+
+  subgraph vip [VipPracticeTracks]
+    TrackA[TrackA_PerioCapacitySprint]
+    TrackB[TrackB_Implementation]
+    TrackC[TrackC_FractionalHygieneDirector]
+  end
+
+  subgraph retain [RetainAndScale]
+    ThriveTogether[ThriveTogetherCohort]
+    FractionalRetainer[FractionalRetainer]
+    QuarterlyTuneUp[QuarterlyTuneUp]
+  end
+
+  subgraph proof [ProofAndAmplify]
+    KpiScorecard[KpiScorecard]
+    CaseStudy[CaseStudy]
+    Testimonial[Testimonial]
+    Referrals[Referrals]
+    SponsorRenewals[SponsorRenewals]
+  end
+
+  AttentionSources --> Lectures
+  AttentionSources --> Instagram
+  AttentionSources --> Podcasts
+  AttentionSources --> PartnerBrands
+  AttentionSources --> Associations
+
+  CaptureLayer --> LeadMagnetScorecard
+  CaptureLayer --> LeadMagnetCapacityCalc
+  CaptureLayer --> NewsletterOptIn
+  CaptureLayer --> DmToLink
+  CaptureLayer --> EventQrCapture
+
+  Qualification --> TriageCall
+  Qualification --> FiveQuestionIntake
+  Qualification --> RouteIndividual
+  Qualification --> RouteTeamPass
+  Qualification --> RouteVipApplicant
+
+  SummitConversion --> TicketIndividual
+  SummitConversion --> TicketTeamPass
+
+  OnsiteConversion --> VipApplication
+  OnsiteConversion --> OwnerSession
+  OnsiteConversion --> SponsorHall
+  OnsiteConversion --> StageCtas
+
+  VipTracks --> TrackA
+  VipTracks --> TrackB
+  VipTracks --> TrackC
+
+  TrackA --> FractionalRetainer
+  TrackB --> FractionalRetainer
+  TrackC --> ThriveTogether
+  ThriveTogether --> FractionalRetainer
+  FractionalRetainer --> ProofEngine
+
+  ProofEngine --> KpiScorecard
+  ProofEngine --> CaseStudy
+  ProofEngine --> Testimonial
+  ProofEngine --> Referrals
+  ProofEngine --> SponsorRenewals
+                    </div>
+                </div>
+
+                <div class="card mt-4">
+                    <h3>Mermaid 2 — Practice pipeline with decision gates (CRM-ready)</h3>
+                    <div class="mermaid">
+flowchart TD
+  Lead[CapturedLead] --> Engage[Engaged]
+  Engage -->|"BookTriageOrSellTicket"| TriageScheduled[TriageScheduled]
+  TriageScheduled --> Intake[FiveQuestionIntakeCompleted]
+  Intake --> QualifyForSummit[QualifiedForSummit]
+  QualifyForSummit -->|"SellIndividual"| RegisteredIndividual[Registered_Individual]
+  QualifyForSummit -->|"SellTeamPass"| RegisteredTeam[Registered_TeamPass]
+  RegisteredIndividual --> Attend[AttendedSummit]
+  RegisteredTeam --> Attend
+  Attend --> OnsiteQr[Onsite_QR_Capture]
+  Attend --> OwnerStrategy[OwnerStrategySessionBooked]
+  OnsiteQr --> VipApp[VipApplicationSubmitted]
+  OwnerStrategy --> VipApp
+  VipApp --> VipFitCall[VipFitCallScheduled]
+  VipFitCall --> VipDecision[VipDecisionGate]
+
+  VipDecision -->|"CapacityBottleneck"| TrackA[TrackA_CapacitySprint]
+  VipDecision -->|"ProtocolsOrComms"| TrackB[TrackB_Implementation]
+  VipDecision -->|"OngoingAccountability"| TrackC[TrackC_Fractional]
+  VipDecision -->|"NotReady"| ThriveTogether[ThriveTogether]
+  VipDecision -->|"NoFit"| Nurture[NurtureSequence]
+
+  TrackA --> DeliveryA[Delivery]
+  TrackB --> DeliveryB[Delivery]
+  TrackC --> DeliveryC[Delivery]
+
+  DeliveryA --> RetainerClose[RetainerConversionMoment]
+  DeliveryB --> RetainerClose
+  ThriveTogether --> RetainerClose
+  RetainerClose -->|"CloseFractional"| Fractional[FractionalRetainerActive]
+  RetainerClose -->|"Decline"| Quarterly[QuarterlyTuneUps]
+
+  Fractional --> Proof[ProofCapture]
+  Quarterly --> Proof
+  Proof --> CaseStudy[CaseStudyProduced]
+  Proof --> Testimonial[TestimonialCaptured]
+  Proof --> ReferralAsk[ReferralAsk]
+                    </div>
+                </div>
+
+                <div class="card mt-4">
+                    <h3>Mermaid 3 — Summit day conversion mechanics (on-site ops)</h3>
+                    <div class="mermaid">
+sequenceDiagram
+  participant Attendee as Attendee
+  participant CheckIn as CheckInDesk
+  participant QR as QR_Landing
+  participant Speaker as SpeakerOnStage
+  participant Staff as StaffRunner
+  participant Owner as PracticeOwner
+  participant Calendar as StrategySessionBooking
+  participant VIP as VipApplicationForm
+
+  Attendee->>CheckIn: ArriveAndCheckIn
+  CheckIn->>QR: DisplayQRCode("ResourcesOptIn")
+  Attendee->>QR: Scan("ResourcesOptIn")
+  QR-->>Attendee: SendResourcesLink
+
+  Speaker->>Attendee: DeliverModule("CapacityAndCommunication")
+  Speaker->>Attendee: CallToAction("ScanVIP_QR")
+  Attendee->>VIP: SubmitApplication
+
+  VIP-->>Staff: NotifyNewApplication
+  Staff->>Owner: InviteToOwnerSession("LimitedSlots")
+  Owner->>Calendar: BookStrategySession
+  Calendar-->>Owner: ConfirmTimeSlot
+
+  Staff->>VIP: ReviewApplication
+  Staff->>Owner: RouteToTrack("A_or_B_or_C")
+  Owner-->>VIP: ConfirmVipFitCall("PostEvent")
+                    </div>
+                </div>
+
+                <div class="card mt-4">
+                    <h3>Mermaid 4 — Sponsor partnership lifecycle (inventory → activation → renewal)</h3>
+                    <div class="mermaid">
+flowchart TD
+  TargetList[TargetListBuilt] --> Outreach[OutreachSent]
+  Outreach --> SponsorCall[DiscoveryCall]
+  SponsorCall --> FitGate[FitAndCategoryGate]
+  FitGate -->|"NotFit"| Disqualify[DisqualifyOrNurture]
+  FitGate -->|"Fit"| PackageSelect[PackageSelection]
+
+  PackageSelect --> Tier1[Tier1_SummitSponsor]
+  PackageSelect --> Tier2[Tier2_SummitPlusContent]
+  PackageSelect --> Tier3[Tier3_AnnualCategoryPartner]
+
+  Tier1 --> Contract[ContractAndInvoice]
+  Tier2 --> Contract
+  Tier3 --> Contract
+
+  Contract --> InventoryLock[InventoryLocked]
+  InventoryLock --> PrePromo[PreSummitPromotion]
+  PrePromo --> OnsiteActivation[OnsiteActivation]
+  OnsiteActivation --> PostEvent[PostEventFollowUp]
+  PostEvent --> Report[ReportDelivered]
+  Report --> RenewalGate[RenewalOrExpandGate]
+
+  RenewalGate -->|"Expand"| Upgrade[UpgradeTierOrAddOns]
+  RenewalGate -->|"Renew"| Renew[RenewAgreement]
+  RenewalGate -->|"Churn"| Learnings[CaptureLearnings]
+
+  subgraph activation [ActivationAssets]
+    Booth[BoothOrTable]
+    StageMention[StageMention]
+    SlideIntegration[SlideIntegration]
+    Webinar[Webinar]
+    ContentBundle[MonthlyContentBundle]
+    Tracking[Tracking_LinksCodesQR]
+  end
+
+  PrePromo --> Tracking
+  OnsiteActivation --> Booth
+  OnsiteActivation --> StageMention
+  OnsiteActivation --> SlideIntegration
+  PostEvent --> Webinar
+  PostEvent --> ContentBundle
+  Report --> Tracking
+                    </div>
+                </div>
+
+                <div class="card mt-4">
+                    <h3>Mermaid 5 — VIP Track A (Capacity Sprint) delivery workflow (2–3 weeks)</h3>
+                    <div class="mermaid">
+flowchart TD
+  Start[Kickoff] --> Baseline[BaselineKpisCollected]
+  Baseline --> Map[MapCurrentSystem]
+  Map --> Bottlenecks[IdentifyBottlenecks]
+  Bottlenecks --> Design[DesignCapacityPlan]
+
+  Design --> PerioBlocks[PerioBlocksPlan]
+  Design --> TriageRules[TriageRules]
+  Design --> AssistedHygieneFit[AssistedHygieneFitCheck]
+  Design --> Delegation[DelegationAndRoomTurnoverPlan]
+  Design --> Scripts[DiagnosisToAcceptanceScripts]
+
+  PerioBlocks --> Implement[ImplementChanges]
+  TriageRules --> Implement
+  AssistedHygieneFit --> Implement
+  Delegation --> Implement
+  Scripts --> Implement
+
+  Implement --> Train[TrainTeam]
+  Train --> Week1Review[Week1KpiReview]
+  Week1Review --> Adjust[AdjustBlocksAndRules]
+  Adjust --> Week2Review[Week2KpiReview]
+  Week2Review --> Stabilize[StabilizeCadence]
+
+  Stabilize --> Scorecard[WeeklyScorecardMeeting]
+  Scorecard --> Result[CapacityEngineWorking]
+  Result --> RetainerOffer[OfferFractionalRetainer]
+                    </div>
+                </div>
+
+                <div class="card mt-4">
+                    <h3>Mermaid 6 — Data + compliance boundaries (HIPAA-safe reporting)</h3>
+                    <div class="mermaid">
+flowchart LR
+  subgraph practice [DentalPracticeSystems]
+    PMS[PracticeManagementSystem]
+    EHR[EHRorClinicalNotes]
+    Scheduling[SchedulingSystem]
+  end
+
+  subgraph amber [AmberOperatingLayer]
+    Intake[IntakeForms]
+    Aggregates[AggregatedKpiSheet]
+    Scorecard[WeeklyScorecard]
+    Training[TrainingAssets]
+    CaseStudies[DeIdentifiedCaseStudies]
+  end
+
+  subgraph sponsors [SponsorMeasurement]
+    Codes[CouponCodes]
+    Links[TrackedLinks]
+    QrOptIn[QR_OptInLeads]
+    Surveys[PostEventSurveys]
+    SponsorReport[SponsorReport]
+  end
+
+  PMS -->|"AggregateExports_NoPHIPreferred"| Aggregates
+  Scheduling -->|"CapacitySignals_NoPHIPreferred"| Aggregates
+  EHR -->|"PHI_AccessOnlyIfBAA_MinNecessary"| Intake
+
+  Aggregates --> Scorecard
+  Scorecard --> Training
+  Training --> CaseStudies
+
+  CaseStudies -->|"NoPHI"| SponsorReport
+  Codes --> SponsorReport
+  Links --> SponsorReport
+  QrOptIn --> SponsorReport
+  Surveys --> SponsorReport
+
+  SponsorReport -->|"RenewalDecision"| sponsors
+                    </div>
+                </div>
+            </section>
+
+            <div id="doc-sections"></div>
+        </main>
+    </div>
+
+    <script>
+        // Initialize mermaid with startOnLoad: false to control when it runs
+        mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+
+        function initializeMermaid() {
+            try { mermaid.init(undefined, document.querySelectorAll('.mermaid')); } catch (e) { /* no-op */ }
+        }
+
+        function slugify(text) {
+            return text
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/(^-|-$)/g, '');
+        }
+
+        // Deliverables: embedded from local markdown files
+        const deliverables = [
+            { file: "00-Offer-Ladder.md", title: "Offer Ladder", md: `# Offer Ladder (final) — Public Thrive Summit is the flagship
+
+This document is the “single source of truth” for what you sell, who it’s for, what success looks like, and how each offer upgrades into the next.
+
+## North star
+- **Flagship conversion event**: **Public Thrive Summit**
+- **Flagship practice upsell**: VIP Practice Tracks (Capacity Sprint / Implementation / Fractional)
+- **Scaled team enablement**: Thrive Together
+- **Ongoing accountability**: Fractional Hygiene Director
+- **High-margin revenue + amplification**: Sponsors/KOL packages attached to Summit + content
+
+---
+
+## Lane A — Practices (high LTV)
+
+### A0) Lead magnets (free, capture)
+- **Soft Tissue Program Scorecard** (self-assessment)
+- **Perio Capacity Calculator** (capacity + revenue gap worksheet)
+- **Language Patterns Pack** (optional bonus)
+- **CTA**: apply for Summit (team pass) OR book a 15-min triage call
+
+### A1) Triage Call (15–20 min; free)
+- **Buyer**: owner / clinical lead / OM
+- **Outcome**: confirm top constraint + route to the right next step
+- **Routing rules**:
+  - “We’re full and can’t fit perio” → VIP Track A (Capacity Sprint)
+  - “Team inconsistency / low acceptance” → VIP Track B (Implementation) or Thrive Together
+  - “Need ongoing oversight” → VIP Track C (Fractional)
+  - “Not ready” → Summit ticket / Thrive Together / nurture
+
+### A2) Soft Tissue Growth Diagnostic (paid; fixed scope)
+- **Purpose**: paid qualifier for practices that want certainty before committing to VIP.
+- **Duration**: 7–10 days remote (optional on-site add-on day)
+- **Outputs**:
+  - baseline KPI snapshot
+  - bottleneck diagnosis (protocol / comms / capacity)
+  - 30/60/90 plan + recommended VIP track
+- **Pricing band**: low–mid four figures (adjust by data access + team size)
+- **Upsell**: VIP Track A/B/C
+
+### A3) Public Thrive Summit — FLAGSHIP (public event)
+- **Buyer**: practice owner buying for team, plus individual attendees
+- **Promise**: install a soft tissue management program that is deliverable in real-world constraints (capacity + communication + systems).
+
+#### Ticketing (recommended)
+- **Individual**: seat + resources
+- **Team Pass** (5–15 seats): team seat bundle + owner session + priority Q&A + VIP eligibility
+- **VIP Practice Track**: application-based; includes post-Summit working sessions
+
+#### Non-negotiable conversion layer
+- QR capture (newsletter + VIP applications)
+- “Owner Strategy Sessions” booked on-site (limited slots)
+
+### A4) VIP Practice Tracks (post-Summit; high-ticket)
+
+#### VIP Track A: Perio Capacity Solution Sprint (2–3 weeks)
+- **Who it’s for**: practices afraid to diagnose because there’s no chair-time
+- **Promise**: increase perio delivery capacity without hiring immediately
+- **Includes**:
+  - assisted hygiene feasibility + 2-op workflow design
+  - scheduling architecture (blocks + triage rules)
+  - assistant utilization + training checklist
+  - patient language patterns + scripts
+- **Pricing band**: mid four figures to low five figures
+- **Upsell**: Fractional Hygiene Director (Track C)
+
+#### VIP Track B: Soft Tissue Program Implementation (6–12 weeks)
+- **Who it’s for**: practices that need full install + calibration
+- **Promise**: install protocols + team behaviors + KPI cadence
+- **Includes**:
+  - program protocols + calibration
+  - communication + language patterns workshops
+  - KPI operating system (weekly scorecard + owner cadence)
+- **Pricing band**: five figures
+- **Upsell**: Fractional Hygiene Director (Track C)
+
+#### VIP Track C: Fractional Hygiene Director (3–12 months)
+- **Promise**: sustained KPI improvement + accountability
+- **Cadence**:
+  - weekly KPI review (leadership)
+  - biweekly team coaching
+  - monthly owner strategy review
+- **Pricing band**: mid-to-high four figures/month up to low five figures/month (scope-based)
+
+---
+
+## Lane B — Education ecosystem (scale)
+
+### B1) Thrive App (subscription)
+- **Role**: always-on learning + credibility engine + top-of-funnel
+- **Feeds**: Summit attendance + Thrive Together
+
+### B2) Thrive Together (cohort + on-demand hybrid)
+- **Buyer**: teams (often owner-sponsored)
+- **Promise**: consistent patient experience + improved acceptance via language + systems
+- **Structure**:
+  - onboarding + templates + scripts
+  - monthly live coaching
+  - certification tier (social proof)
+- **Upsell**: Summit team pass; VIP Tracks for practices that want deeper change
+
+### B3) Public Thrive Summit
+- **Role**: flagship conversion + community + sponsorship anchor
+
+---
+
+## Lane C — Sponsors / KOL (high-margin amplification)
+
+### C1) Summit Sponsor (event package)
+- **Role**: first “yes” offer for brands; funds the event
+- **Includes**: booth/table + stage mention + opt-in lead capture + post-event email mention
+
+### C2) Summit + Content (quarterly partner)
+- **Includes**: Summit Sponsor + podium slide integration + 1 webinar + monthly content bundle + tracked links/codes + reporting
+
+### C3) Annual Category Partner (flagship sponsor)
+- **Includes**: category exclusivity + co-branded Thrive module or Summit session + quarterly activations + monthly reporting
+
+---
+
+## Data + compliance guardrails (simple)
+- Prefer **de-identified / aggregated reporting**.
+- If PHI is needed: **BAA + minimum necessary** + documented data handling.
+- Sponsor analytics must stay **non-PHI** (codes, links, surveys, opt-in leads).
+` },
+            { file: "01-Public-Thrive-Summit-OnePager.md", title: "Public Thrive Summit (One Pager)", md: `# Public Thrive Summit — One Pager (Flagship)
+
+## What it is
+**Thrive Summit** is the flagship, public, team-based event for practices that want to modernize soft tissue management *and* make it operationally deliverable—without breaking the schedule.
+
+## Who it’s for
+- Practice owners / dentists / leadership teams
+- Hygiene + assistants + front office (the whole patient journey)
+- Practices experiencing:
+  - under-diagnosis / under-treatment of gingivitis/perio
+  - inconsistent language and low patient compliance
+  - hygiene shortage + “we’re booked out” capacity constraints
+
+## What attendees leave with (outcomes)
+- A practical **Soft Tissue Management Program**: protocols + roles + standards
+- A **Communication System**: language patterns + handoffs from first call → close → reappoint
+- A **Capacity Plan**: perioblock strategy, triage rules, and assisted hygiene fit (what to do next week)
+- A **KPI Cadence**: scorecard + weekly rhythm to sustain change
+
+## The big promise (positioning)
+**Put the heart back into care—while building a scalable soft tissue program that improves patient experience and unlocks growth without breaking your schedule.**
+
+## Format
+- Public event (in-person)
+- Designed for individuals *and* entire practice teams
+- Includes structured on-site conversion layer: QR capture + owner strategy sessions + VIP track applications
+
+## Agenda (high level)
+### Module 1 — The modern soft tissue program
+- diagnosis standards + protocol consistency
+- evidence-based, patient-first framing (not insurance-led)
+
+### Module 2 — Language patterns that drive compliance
+- front desk → hygiene → doctor exam → treatment close → reappoint
+- scripts that feel human (not salesy)
+
+### Module 3 — Perio capacity in the real world
+- why “diagnose more perio” breaks schedules
+- scheduling architecture + triage rules
+- assisted hygiene model: when it fits and how to implement
+
+### Module 4 — Accountability that sticks
+- weekly scorecard
+- role ownership + meeting cadence
+
+## Ticket tiers (recommended)
+- **Individual Ticket**
+  - Summit seat + resources
+- **Team Pass (5–15 seats)**
+  - team seats + owner/leadership add-on session + priority Q&A
+  - VIP eligibility for post-Summit practice tracks
+- **VIP Practice Track (application-based)**
+  - reserved for team-pass practices that want post-Summit implementation support
+
+## Post-Summit upgrades (VIP Practice Tracks)
+These are the primary “practice outcomes” paths:
+- **VIP Track A**: Perio Capacity Solution Sprint (2–3 weeks)
+- **VIP Track B**: Soft Tissue Program Implementation (6–12 weeks)
+- **VIP Track C**: Fractional Hygiene Director (3–12 months)
+
+## Call to action
+- Bring your team.
+- Attend the Summit.
+- Apply for a VIP Practice Track if you want measurable change with accountability.
+
+## FAQ (short)
+- **Is this for insurance-based practices?**
+  - Yes—but the framework prioritizes evidence-based, patient-first care and communication that improves compliance.
+- **Do we need to bring data?**
+  - Not required for Summit. Required for VIP Tracks (de-identified/aggregated preferred).
+` },
+            { file: "02-VIP-Practice-Tracks-OnePager.md", title: "VIP Practice Tracks (One Pager)", md: `# VIP Practice Tracks — One Pager (post-Summit conversions)
+
+VIP Practice Tracks are the post-Summit paths for practices that want results with implementation support and accountability. These are application-based and best paired with a Team Pass.
+
+## Who VIP is for
+- You want the Summit training **installed into the practice**, not just learned.
+- You need help solving:
+  - **capacity constraints** (booked out / hygiene shortage)
+  - **team inconsistency** (language + protocols vary by provider)
+  - **accountability** (KPIs aren’t reviewed and owned weekly)
+
+## Track A — Perio Capacity Solution Sprint (2–3 weeks)
+### Ideal for
+Practices that are afraid to diagnose/convert more perio because there’s “nowhere to put patients.”
+
+### Promise
+Increase perio delivery capacity **without hiring immediately**, by redesigning flow + schedule + delegation.
+
+### Includes
+- assisted hygiene feasibility + 2-op workflow design
+- schedule architecture (perio blocks, re-care design, triage rules)
+- assistant utilization plan + training checklist
+- language patterns for diagnosis → acceptance → reappointment
+- KPI scorecard + weekly cadence for the first 30 days
+
+### What you provide
+- access to aggregated KPIs (de-identified preferred)
+- leadership point person (owner/OM/clinical lead)
+- 60–90 minute weekly working session availability during Sprint
+
+### Primary outcome
+A working “capacity engine” that allows you to diagnose and deliver more perio care without collapsing the schedule.
+
+## Track B — Soft Tissue Program Implementation (6–12 weeks)
+### Ideal for
+Practices that need a full install: protocols + calibration + communication + accountability.
+
+### Promise
+Install a consistent soft tissue management program that your whole team runs the same way, every day.
+
+### Includes
+- program protocol install + calibration across providers
+- communication workshop (front → hygiene → doc → close → reappoint)
+- patient experience mapping (first call → outstanding tx plan close)
+- KPI operating system (weekly scorecard + owner meeting rhythm)
+- resource library: scripts, templates, checklists
+
+### Primary outcome
+Consistency + measurable KPI lift sustained by a repeatable operating cadence.
+
+## Track C — Fractional Hygiene Director (3–12 months)
+### Ideal for
+Practices that want sustained KPI gains and long-term accountability.
+
+### Promise
+Ongoing leadership + coaching + KPI oversight so gains don’t fade after the Summit.
+
+### Cadence (simple)
+- weekly KPI review (leadership)
+- biweekly team coaching
+- monthly owner strategy review
+
+### Primary outcome
+Continuous improvement with accountability and a clear monthly scorecard.
+
+## How to join
+- Attend via **Team Pass** (recommended) or Individual ticket (by application)
+- Submit VIP application (QR at Summit or post-event email)
+- You’ll be routed into Track A/B/C based on your constraint and goals
+` },
+            { file: "03-Fractional-Hygiene-Director-OnePager.md", title: "Fractional Hygiene Director (One Pager)", md: `# Fractional Hygiene Director — One Pager
+
+## Who this is for
+Practice owners and leadership teams who want sustained improvement in soft tissue management, patient experience, and team performance—with accountability that doesn’t fade after training.
+
+## The promise
+**Sustained KPI improvement + team accountability** through ongoing leadership, coaching, and a simple operating cadence.
+
+## What you get (deliverables)
+- **KPI scorecard** (weekly view + monthly rollup)
+- **Weekly leadership KPI review** (30–60 min)
+- **Biweekly team coaching** (communication, calibration, workflows)
+- **Monthly owner strategy review** (priorities, staffing, capacity, growth)
+- **Protocol standardization** support (as needed)
+- **Language patterns** + scripts (front desk, hygiene, close, reappoint)
+
+## What we track (example KPIs)
+- perio diagnosis %
+- perio treatment %
+- pre-appoint %
+- re-care kept %
+- outstanding treatment plan close rate
+- hygiene capacity indicators (perio blocks utilization, time-to-appointment)
+
+## How it works (cadence)
+- **Week 0 (setup)**: baseline snapshot + goals + scorecard install
+- **Weekly**: KPI review + priorities + owner decisions
+- **Biweekly**: team coaching + calibration (role-based)
+- **Monthly**: strategy review + next-month plan
+
+## Guardrails (HIPAA / data)
+- Prefer **de-identified / aggregated reporting**.
+- If PHI access is required, this must be covered by a proper **BAA**, minimum necessary access, and documented handling practices.
+
+## Engagement terms (recommended)
+- 3-month minimum (behavior change needs time)
+- 6–12 months for full system maturity and sustained KPI lift
+
+## Next step
+Attend **Public Thrive Summit** with a Team Pass, then apply for VIP Track C (Fractional) if you want ongoing execution and accountability.
+` },
+            { file: "04-Sponsor-KOL-Deck.md", title: "Sponsor / KOL Partner Deck", md: `# Sponsor / KOL Partner Deck (outline you can paste into slides)
+
+## 1) What we do
+We modernize soft tissue management in dentistry with evidence-based education, team coaching, and operational capacity solutions—so practices improve patient experience *and* unlock growth without breaking the schedule.
+
+## 2) Why now (market reality)
+- Soft tissue disease is widespread; many practices under-diagnose/under-treat.
+- The hygiene shortage + schedule capacity makes teams afraid to diagnose and deliver optimal care.
+- Brands win when education is trusted, practical, and measurable—not just “influence.”
+
+## 3) Who we reach
+- Dental hygienists, practice teams, and practice leadership
+- CE-driven audiences (associations, conferences, summits)
+- Social audience (IG + newsletter)
+
+> Replace with your real numbers: followers, email list size, annual events, average attendance.
+
+## 4) Flagship platform: Public Thrive Summit
+**Thrive Summit** is our flagship public, team-based event.
+
+Sponsor benefits:
+- high-intent attendees
+- live education context (trust)
+- opt-in lead capture
+- post-event follow-up and reporting
+
+## 5) Measurement philosophy (what you’ll get)
+We track outcomes using **non-PHI** mechanisms:
+- tracked links
+- discount codes
+- QR opt-in leads
+- surveys and post-event attribution questions
+- monthly performance summary
+
+## 6) Packages
+
+### Tier 1 — Summit Sponsor
+**Best for**: first partnership / testing fit
+
+Includes:
+- logo placement (site + signage)
+- booth/table presence
+- 1 short stage mention
+- opt-in lead capture (QR)
+- post-event email mention
+
+Optional add-ons:
+- product demo slot
+- sample inclusion
+
+### Tier 2 — Summit + Content (Quarterly Partner)
+**Best for**: brands that want demand creation beyond the event
+
+Includes:
+- everything in Tier 1
+- podium slide integration (educational context)
+- 1 webinar (co-hosted)
+- monthly content bundle (IG + newsletter inclusion)
+- tracked links/codes + monthly reporting
+
+### Tier 3 — Annual Category Partner (Flagship)
+**Best for**: brands that want category ownership + predictable activations
+
+Includes:
+- everything in Tier 2
+- category exclusivity
+- co-branded Thrive module *or* Summit session
+- quarterly activations
+- monthly reporting + quarterly strategy review
+
+## 7) Creative guidelines (keeps trust high)
+- educational-first integration (no “hard sell” tone)
+- clear claims standards
+- compliance-safe attribution
+
+## 8) Activation timeline (example)
+- 30–45 days pre-Summit: announce + registration push
+- Summit week: live activation + QR capture
+- 2 weeks post: recap email + webinar schedule
+- 30 days post: report + next activation plan
+
+## 9) Next step
+Choose a tier → confirm deliverables → lock dates → launch co-branded promotion plan.
+` },
+            { file: "10-CRM-Pipeline-and-Stages.md", title: "CRM Pipeline + Stages", md: `# CRM Pipeline + Stages (Summit-centric)
+
+Use these stages in HubSpot, Pipedrive, Airtable, Notion, etc. The goal is to make **Public Thrive Summit** the primary conversion event, then route practices to VIP Tracks.
+
+## Pipeline: Practices (Summit + VIP)
+### Stage 0 — Captured Lead
+- Source: lead magnet, IG DM, event QR, sponsor referral, website form
+- Required fields: name, role, practice name, email, phone, city/state, source
+
+### Stage 1 — Engaged (2-way conversation)
+- They replied to an email/DM or booked a link
+- Next action: book triage call or sell Summit ticket/team pass
+
+### Stage 2 — Triage Scheduled
+- 15–20 min triage booked
+- Pre-call: send 5-question intake (see \`11-Qualification-Flow.md\`)
+
+### Stage 3 — Qualified for Summit
+- Fit confirmed; primary CTA is **Summit Team Pass**
+- Secondary CTA: Individual ticket
+
+### Stage 4 — Registered (Summit ticket sold)
+- Ticket type: Individual / Team Pass / VIP applicant
+- Next actions: pre-event emails + “bring your team” upsell
+
+### Stage 5 — Attended Summit
+- Attendance confirmed (QR check-in)
+- Next actions: on-site strategy session + VIP application
+
+### Stage 6 — VIP Application Submitted
+- Route to Track A/B/C based on constraint
+- Schedule 30-min “VIP Fit Call”
+
+### Stage 7 — VIP Fit Call Completed
+- Decision made: Track A / B / C / Thrive Together / Nurture
+
+### Stage 8 — Closed Won (VIP Track)
+- Contract signed + onboarding scheduled
+- Set KPI baseline date
+
+### Stage 9 — Delivery (Active Engagement)
+- Weekly cadence running
+- Capture wins and testimonials
+
+### Stage 10 — Converted to Fractional (Retainer)
+- Track A/B graduates upgrade to Track C where appropriate
+
+### Stage 11 — Alumni / Referral / Renew
+- Referral ask + case study + sponsor intro request
+
+## Pipeline: Sponsors (Summit-first)
+### Stage 0 — Target Identified
+- Company, contact, category, last interaction, fit notes
+
+### Stage 1 — Outreach Sent
+- Email/LinkedIn/intro
+
+### Stage 2 — Meeting Booked
+- 20–30 min sponsor discovery
+
+### Stage 3 — Proposal Sent
+- Tier 1/2/3 + inventory availability
+
+### Stage 4 — Negotiation
+- redlines, dates, deliverables, attribution
+
+### Stage 5 — Closed Won
+- activation calendar + reporting cadence
+
+### Stage 6 — Live Activation
+- Summit + content + webinars
+
+### Stage 7 — Renewal / Expand
+- annual partner upgrade
+` },
+            { file: "11-Qualification-Flow.md", title: "Capture + Qualification Flow", md: `# Capture + Qualification Flow (Summit-centric)
+
+This is the minimum viable funnel to turn attention into Summit registrations and VIP track conversions.
+
+## Entry points (capture)
+- Lead magnets (Scorecard, Capacity Calculator)
+- IG content CTAs
+- Lectures / association events (QR on slides)
+- Sponsor partner referrals
+
+## Capture form (minimum fields)
+- Name
+- Email
+- Role (owner/dentist/OM/hygienist/assistant/other)
+- Practice name
+- City/state
+- Biggest challenge (dropdown): capacity, acceptance/comms, protocols, turnover, “not sure”
+
+## Qualification (routing logic)
+### Route 1 — Individual attendee
+- **Who**: hygienist/assistant/front office or owner coming solo
+- **Goal**: sell **Individual Summit Ticket**
+- **Follow-up**:
+  - send agenda + “bring your team” upsell
+  - offer Thrive Together as the post-event path
+
+### Route 2 — Practice team / leadership
+- **Who**: owner/OM/clinical lead (often buying for multiple seats)
+- **Goal**: sell **Team Pass**
+- **Follow-up**:
+  - confirm number of seats (5–15)
+  - invite VIP track application (capacity/implementation/fractional)
+
+### Route 3 — VIP applicant (practice wants outcomes + accountability)
+- **Who**: practice with a real constraint and urgency
+- **Goal**: Team Pass + VIP Fit Call scheduled
+- **VIP Fit Call gate**: must complete the 5-question intake below
+
+## 5-question intake (send before triage/VIP fit call)
+1) What’s your current biggest constraint?
+- capacity (booked out / hygiene shortage)
+- acceptance/comms
+- protocols inconsistency
+- turnover
+- other
+
+2) What is your current perio diagnosis % (estimate if unsure)?
+
+3) How many weeks booked out is hygiene?
+
+4) What is your biggest “leak” right now?
+- patients not accepting
+- no place to schedule
+- inconsistent handoffs
+- insurance objections
+- other
+
+5) What outcome would make Summit + VIP a win in 60 days?
+
+## Conversion CTAs (copy/paste)
+- **Individual**: “Grab an Individual ticket—then we’ll send you the prep packet so you get the most out of the Summit.”
+- **Team Pass**: “Bring your team. The Team Pass includes an owner session and VIP eligibility—this is how you turn training into actual KPI change.”
+- **VIP**: “If you want us to help implement this, apply for a VIP Track. We’ll route you into Capacity Sprint, Implementation, or Fractional based on your constraint.”
+` },
+            { file: "12-Discovery-Call-Script.md", title: "Discovery / Triage Call Script", md: `# Discovery / Triage Call Script (15–20 min)
+
+## Goal
+Route to the next best step:
+- **Public Thrive Summit (Individual / Team Pass)**
+- **VIP Practice Track application**
+- Thrive Together (if not ready)
+- Paid Diagnostic (optional qualifier)
+
+## 0) Open (60 seconds)
+“Thanks for making time. In 15 minutes I want to understand what you’re trying to fix, what’s blocking you, and whether Summit (and possibly a VIP Track) is the right next step.”
+
+## 1) Context (2 minutes)
+- “What prompted you to reach out today?”
+- “What does ‘better’ look like in 60–90 days?”
+
+## 2) Identify the constraint (5 minutes)
+Pick the primary bucket and go deeper:
+
+### Capacity (booked out / hygiene shortage)
+- “How far out is hygiene booked?”
+- “If you diagnosed more perio tomorrow, where would those patients go?”
+- “Have you tried perioblocks or assisted hygiene?”
+
+### Communication / acceptance
+- “Where do patients drop off—diagnosis, close, reappoint?”
+- “Do different providers explain perio differently?”
+
+### Protocol inconsistency
+- “Do you have a standard for gingivitis vs perio and what to do next?”
+
+### Accountability
+- “Are KPIs reviewed weekly? Who owns them?”
+
+## 3) Quick KPI snapshot (2 minutes)
+- “Roughly what % of your patient base has soft tissue disease?”
+- “What % are you billing/treating for today?”
+- “What’s your current perio maintenance flow?”
+
+## 4) Diagnose out loud (2 minutes)
+Mirror back in one sentence:
+- “It sounds like the core issue is ___, and the reason it persists is ___. If we solve that, you get ___.”
+
+## 5) Prescribe next step (2 minutes)
+Choose one:
+
+### Prescribe Summit (default)
+- “The fastest next step is Public Thrive Summit. If you bring your team, you’ll leave with protocols + language + a capacity plan that’s deliverable.”
+
+### Prescribe Team Pass + VIP application
+- “Given your constraint, I recommend a Team Pass and applying for VIP. We’ll route you into Capacity Sprint / Implementation / Fractional.”
+
+### Prescribe Thrive Together
+- “If you want to start lighter and build consistency, Thrive Together is the best fit and it sets you up for Summit.”
+
+### Prescribe paid Diagnostic (optional)
+- “If you want certainty before committing to VIP, we can run a short diagnostic and then decide the track.”
+
+## 6) Close (60 seconds)
+- Confirm decision
+- Send link + next steps
+- “If you bring your team, you’ll 10x your results. Who should be on the Team Pass?”
+
+## Objection handling (quick)
+- **“We’re too busy.”**
+  - “That’s exactly why this matters—capacity constraints don’t fix themselves. Summit gives you a plan that protects the schedule.”
+- **“Insurance won’t cover.”**
+  - “We don’t let insurance dictate care; we focus on evidence-based patient communication and the operational plan to deliver care.”
+` },
+            { file: "13-Summit-Followup-Sequences.md", title: "Summit Follow-up Sequences", md: `# Public Thrive Summit — Follow-up Sequences (copy/paste)
+
+These are intentionally short and “human.” Adjust tone for IG vs email.
+
+## Pre-event (registration → attendance)
+
+### Email 0: Confirmation (immediately)
+Subject: You’re in — Thrive Summit details
+
+Body:
+Thanks for registering for Thrive Summit.
+
+Here’s what to expect:
+- Agenda + outcomes: [link]
+- Logistics: [link]
+- Prep packet: [link]
+
+If you’re coming from a practice, the fastest way to get results is to bring your team. Reply with “TEAM” and I’ll send the Team Pass details.
+
+### Email 1: Team upsell (3–5 days after reg)
+Subject: Quick question — who’s coming with you?
+
+Body:
+Most practices don’t need “more information”—they need the whole team aligned.
+
+If you bring your hygienist + assistant + front desk, you’ll leave with a system you can run Monday morning.
+
+Want the Team Pass details?
+
+### Email 2: 7-day reminder
+Subject: 7 days — here’s how to get the most from Summit
+
+Body:
+Bring:
+- your biggest bottleneck (capacity vs acceptance vs protocols)
+- your current weeks-booked-out
+- one example of a patient conversation that didn’t convert
+
+We’ll build the capacity + communication plan together.
+
+### Email 3: 24-hour reminder
+Subject: Tomorrow — Thrive Summit check-in
+
+Body:
+We start tomorrow.
+
+Check-in: [time]
+Location: [address]
+QR check-in: [instructions]
+
+If you want implementation support, you can apply for VIP on-site.
+
+## On-site (capture + booking)
+
+### QR landing CTAs
+- “Get the resources + scripts” (newsletter opt-in)
+- “Apply for a VIP Track” (application)
+- “Book an Owner Strategy Session” (limited slots)
+
+### 30-second stage CTA (script)
+“If you want the resources, scan the QR. If you want help implementing this inside your practice, scan the VIP QR and apply—we’ll route you into the right track based on your constraint.”
+
+## Post-event (conversion)
+
+### Email 1: 48-hour recap
+Subject: Your Thrive Summit recap + next steps
+
+Body:
+Here are the resources from Summit: [link]
+
+Your next step depends on your constraint:
+- Want team consistency? Thrive Together: [link]
+- Want capacity solved fast? VIP Track A (Capacity Sprint): [link]
+- Want full install? VIP Track B (Implementation): [link]
+- Want ongoing accountability? VIP Track C (Fractional): [link]
+
+### Email 2: 7-day “what top practices implemented”
+Subject: What the top teams did in the first 7 days
+
+Body:
+The teams that get results do these 3 things first:
+1) Put perioblocks on the schedule
+2) Align language patterns across the team
+3) Run a weekly scorecard meeting
+
+If you want help installing this, VIP applications are open this week.
+
+### Email 3: 14-day deadline (VIP Track A start date)
+Subject: VIP Capacity Sprint starts [date]
+
+Body:
+If capacity is your bottleneck, we’re starting the next Capacity Sprint cohort on [date].
+
+Apply here: [link]
+
+We’ll only take [N] practices so implementation stays hands-on.
+
+### Email 4: 30-day Thrive Together cohort
+Subject: Next Thrive Together cohort starts [date]
+
+Body:
+If you want monthly coaching + templates + certification, Thrive Together is the best next step.
+
+Join here: [link]
+
+## IG DM scripts (short)
+
+### DM 1 (after lead magnet)
+“Just saw you grabbed the Scorecard/Calculator—what’s the biggest bottleneck right now: capacity, acceptance, or protocols?”
+
+### DM 2 (route to Summit)
+“Got it. Thrive Summit is designed exactly for that. Are you coming solo or bringing your team? Team Pass is where results accelerate.”
+
+### DM 3 (VIP)
+“If you want help implementing this, apply for VIP. We’ll route you into Capacity Sprint / Implementation / Fractional based on your constraint.”
+` },
+            { file: "14-KPI-Scorecard-Template.md", title: "KPI Scorecard Template", md: `# KPI Scorecard Template (practice)
+
+Use de-identified/aggregated reporting. The goal is a simple weekly rhythm that creates accountability.
+
+## Baseline snapshot (Week 0)
+- Practice: ______
+- Date range: ______
+- Weeks booked out (hygiene): ______
+- Hygiene capacity notes: ______
+
+## Weekly KPIs (track every week)
+### Soft tissue KPIs
+- Perio diagnosis %: ____
+- Perio treatment started % (of diagnosed): ____
+- Perio maintenance scheduled % (for indicated patients): ____
+
+### Patient journey / conversion KPIs
+- Outstanding treatment plan close rate %: ____
+- Pre-appoint %: ____
+- Re-care kept %: ____
+
+### Capacity indicators
+- Perio blocks scheduled/week: ____
+- Perio blocks utilized %: ____
+- Average time-to-appointment (hygiene): ____
+
+## Weekly meeting agenda (30 minutes)
+1) Wins (5 min)
+2) KPI review (10 min)
+3) Root cause (5 min)
+4) Commitments (10 min)
+
+Commitments:
+- Owner: ______
+- OM: ______
+- Hygiene lead: ______
+- Front desk: ______
+
+## Notes / blockers
+- Blocker: ______
+- Decision needed: ______
+- Owner decision deadline: ______
+` },
+            { file: "20-Pilot-Engagement-Playbook.md", title: "Pilot Engagement Playbook", md: `# Pilot Engagement Playbook (2–3 pilots)
+
+This playbook is how you run 2–3 fast pilots that generate measurable outcomes and case studies. It’s designed to be **HIPAA-safe** (aggregate, de-identified reporting preferred).
+
+## What counts as a “pilot”
+A pilot is a short, bounded engagement tied to a VIP Track:
+- **Pilot A**: Perio Capacity Solution Sprint (2–3 weeks)
+- **Pilot B**: Soft Tissue Program Implementation (6–12 weeks)
+
+Goal: capture baseline → implement → measure → document.
+
+## Pilot selection criteria (pick 2–3)
+- leadership buy-in (owner committed to weekly cadence)
+- clear constraint (capacity OR acceptance/protocol inconsistency)
+- willing to share **aggregated KPIs** pre/post (no PHI)
+- willing to provide a testimonial + reference call
+
+## Pre-work (Week 0)
+### 1) Baseline KPI snapshot (aggregate)
+Capture:
+- hygiene weeks booked out
+- perio diagnosis %
+- perio treatment started %
+- pre-appoint %
+- re-care kept %
+- outstanding tx plan close %
+- perioblocks/week (if any)
+
+### 2) Constraint statement (one sentence)
+“We are currently at ___ and the constraint is ___, which causes ___.”
+
+### 3) Success definition (60-day target)
+Pick 2–3 targets only:
+- increase perio diagnosis % from __ to __
+- increase perioblock utilization to __%
+- reduce time-to-appointment by __ weeks
+- increase pre-appoint to __%
+- increase acceptance/close to __%
+
+### 4) Permissions + compliance
+- use de-identified/aggregated metrics
+- if PHI access is required, execute BAA and document minimum-necessary access
+
+## Pilot A: Perio Capacity Solution Sprint (2–3 weeks)
+### Week 1 — Diagnose the capacity system
+- map current schedule and bottlenecks
+- define perioblock strategy
+- write triage rules
+- evaluate assisted hygiene fit
+
+### Week 2 — Implement + train
+- publish schedule changes
+- train assistants on delegation
+- align language patterns for diagnosis → acceptance → reappoint
+
+### Week 3 (optional) — Stabilize + scorecard rhythm
+- run first weekly scorecard meeting
+- adjust blocks/triage based on utilization
+
+## Pilot B: Soft Tissue Program Implementation (6–12 weeks)
+- protocol install + calibration
+- communication workshop across the patient journey
+- weekly KPI cadence + accountability ownership
+
+## Reporting (weekly)
+Use \`14-KPI-Scorecard-Template.md\`.
+- take a screenshot/export weekly
+- keep a running “wins log” (quotes, moments, outcomes)
+
+## Case study capture (during + after)
+Collect:
+- baseline numbers
+- changes implemented (3 bullets)
+- results at 30/60 days
+- testimonial quote
+- “before/after” story (human + operational)
+
+Use \`21-Case-Study-Template.md\`.
+
+## Testimonial request timing
+- ask for the quote at first visible win (week 2–3)
+- ask for a structured testimonial at 30–60 days
+
+Use \`22-Testimonial-and-Referral-Request.md\`.
+` },
+            { file: "21-Case-Study-Template.md", title: "Case Study Template", md: `# Case Study Template (de-identified)
+
+## Title
+“How a [PracticeType] improved [PrimaryOutcome] in [Timeframe] without [Constraint]”
+
+## Snapshot (top box)
+- **Practice**: De-identified (size, state/region, type)
+- **Primary constraint**: capacity / acceptance / protocol inconsistency
+- **Timeframe**: 30/60/90 days
+- **Primary result**: (one metric)
+
+## The problem (3–5 sentences)
+- What was happening
+- Why it mattered to patients and the business
+- What the team felt (stress/turnover/overwhelm)
+
+## Baseline (numbers)
+- Perio diagnosis %: __
+- Perio treatment started %: __
+- Hygiene booked out: __ weeks
+- Pre-appoint %: __
+- Re-care kept %: __
+- Outstanding tx plan close %: __
+
+## What we installed (3–7 bullets)
+- perioblock strategy
+- triage rules
+- assisted hygiene delegation plan
+- language patterns for diagnosis → acceptance
+- weekly KPI scorecard + ownership
+- protocol calibration
+
+## Results (30/60 days)
+Show the before/after. Keep it honest and clear.
+- Metric 1: __ → __
+- Metric 2: __ → __
+- Metric 3: __ → __
+
+## What changed for patients (qualitative)
+- improved understanding
+- improved compliance
+- improved experience
+
+## What changed for the team (qualitative)
+- less chaos
+- consistent language
+- clear accountability
+
+## Testimonial (quote)
+“…” — Role, de-identified
+
+## Next step (CTA)
+Bring your team to **Public Thrive Summit** and apply for a VIP Track if you want implementation support.
+` },
+            { file: "22-Testimonial-and-Referral-Request.md", title: "Testimonial + Referral Requests", md: `# Testimonial + Referral Request (copy/paste)
+
+## Quick “win moment” ask (text/DM)
+“Quick ask—would you be open to a 1–2 sentence quote about what’s already improved since we started? Nothing clinical, just the operational/patient experience change.”
+
+## Structured testimonial ask (email)
+Subject: Quick favor?
+
+Body:
+We’ve made great progress and I’d love to document it (de-identified) so other practices can learn from your team.
+
+Would you answer 3 quick questions?
+1) What was the biggest problem before we started?
+2) What changed (specific wins)?
+3) What would you tell another owner considering this?
+
+If you’re open to it, I’ll also ask for a referral to 1 practice owner who’d benefit from Thrive Summit.
+
+## Referral ask (simple)
+“Do you know 1 owner who is struggling with capacity or perio program consistency? If you intro us, I’ll take great care of them and keep you posted.”
+` },
+            { file: "30-Sponsor-Outreach-and-Proposal-Templates.md", title: "Sponsor Outreach + Proposal Templates", md: `# Sponsor Outreach + Proposal Templates (Summit-centric)
+
+## Target list (categories)
+- air polishing / hygiene equipment
+- perio products
+- imaging
+- practice management software
+- staffing / hiring platforms
+- DSOs (if aligned)
+
+## Outreach email (cold)
+Subject: Thrive Summit partnership (measurable, opt-in)
+
+Hi [Name]—
+
+I’m Amber. I run Thrive Summit, a public, team-based event helping practices modernize soft tissue management while solving the real-world constraint: hygiene shortage + capacity.
+
+I’m reaching out because I think [Brand] is a strong fit for a Summit Sponsor partnership.
+
+What makes this different:
+- education-first integration (trusted context)
+- opt-in lead capture (QR)
+- tracked links/codes + simple reporting
+
+Open to a 20-minute call this week to see if Tier 1/2 makes sense?
+
+—Amber
+
+## Outreach DM (short)
+“Hi [Name]—I run Thrive Summit (team-based dentistry education). We offer Summit sponsor packages with opt-in leads + tracked conversion. Open to a 20-min fit call?”
+
+## Discovery call questions (sponsor)
+1) What’s your #1 growth goal this quarter?
+2) What’s your primary buyer (hygienist, owner, DSO)?
+3) What has worked (and not worked) in KOL/education?
+4) What does success look like (leads, sales, demos)?
+5) What compliance constraints do you have?
+
+## Proposal structure (1 page)
+- Summary: why fit
+- Package tier (1/2/3)
+- Deliverables + dates
+- Attribution plan (links/codes/QR)
+- Reporting cadence (monthly)
+- Investment
+
+## Reporting template (monthly)
+- impressions (email opens, clicks, IG reach)
+- opt-in leads captured
+- link/coupon conversions
+- notes/learned
+- next activation plan
+` },
+            { file: "31-Thrive-Together-Cohort-Launch-Kit.md", title: "Thrive Together Cohort Launch Kit", md: `# Thrive Together Cohort Launch Kit (post-Summit)
+
+## Offer positioning (simple)
+Thrive Together is the post-Summit path for teams who want monthly coaching, templates, and certification to keep implementation moving.
+
+## Cohort structure (recommended)
+- Duration: 6–8 weeks (or monthly membership with a cohort onboarding)
+- Live calls: 1x/month minimum (2x/month if you want faster outcomes)
+- Assets: templates + scripts + checklists + replay library
+- Certification: criteria-based (attendance + implementation + scorecard submission)
+
+## Enrollment windows (recommended)
+- Open enrollment: 2 weeks post-Summit
+- Start date: 30 days post-Summit
+- Close enrollment: 72 hours before start
+
+## Core modules
+1) Soft tissue program consistency
+2) Language patterns + compliance
+3) Capacity + scheduling architecture
+4) Scorecard + accountability cadence
+5) Handling insurance objections without insurance-led care
+6) Calibration + sustaining through turnover
+
+## Summit-to-cohort conversion email (copy)
+Subject: Keep the momentum—Thrive Together starts [date]
+
+Body:
+If you want support implementing what you learned at Summit, Thrive Together is where we keep the team aligned.
+
+You’ll get:
+- monthly coaching
+- templates + scripts
+- certification path
+
+Join here: [link]
+
+## Renewal / upsell paths
+- High capacity constraint → VIP Track A (Capacity Sprint)
+- High inconsistency / deeper change → VIP Track B (Implementation)
+- Wants long-term oversight → VIP Track C (Fractional)
+` },
+            { file: "32-Retainer-Conversion-Playbook.md", title: "VIP → Fractional Conversion Playbook", md: `# VIP → Fractional Retainer Conversion Playbook
+
+## The principle
+VIP Tracks create measurable change; Fractional keeps it from fading.
+
+Your close should feel like: “Do you want this to *stay* and *compound*?”
+
+## When to offer Fractional
+- first visible KPI lift
+- leadership asks “how do we keep this going?”
+- turnover risk is high
+- the practice wants growth goals beyond soft tissue
+
+## The close (script)
+“We’ve proven we can move the needle. The only question is whether you want this to be a one-time improvement or a permanent operating system.
+
+Fractional Hygiene Director is how we keep the weekly scorecard, team calibration, and capacity system running so results compound.”
+
+## Offer framing
+- 3-month minimum
+- weekly leadership KPI cadence
+- biweekly team coaching
+- monthly owner strategy
+
+## 3 options (anchor + choice)
+- **Option 1**: Thrive Together (light support)
+- **Option 2**: Fractional (recommended)
+- **Option 3**: Quarterly tune-ups (for low-touch buyers)
+
+## Renewal triggers
+- new hygienist onboarding
+- new associate dentist
+- adding operatories
+- new sponsor activations
+- prepping for a DSO/PE conversation
+` },
+            { file: "40-Summit-Landing-Page-Copy.md", title: "Summit Landing Page Copy", md: `# Public Thrive Summit — Landing Page Copy (paste into a website)
+
+## Hero
+### Headline
+Modernize soft tissue management—without breaking your schedule.
+
+### Subhead
+**Public Thrive Summit** is a team-based, in-person event designed to help practices install a soft tissue program that is actually deliverable in the real world: capacity + communication + systems + accountability.
+
+### Primary CTA buttons
+- Get tickets (Individual)
+- Bring your team (Team Pass)
+
+### Secondary CTA
+- Apply for VIP Practice Tracks
+
+---
+
+## The problem (why this exists)
+Most practices want to improve perio/soft tissue care—but when you diagnose and convert more perio, you hit the bottleneck: **hygiene shortage + schedule capacity**.
+
+That’s why Thrive Summit isn’t just “CE.” It’s implementation thinking: what to do on Monday so you can deliver care at scale.
+
+---
+
+## Who it’s for
+- Owners / dentists / leadership teams
+- Hygienists, assistants, and front office (the whole patient journey)
+- Practices facing:
+  - under-diagnosis / under-treatment
+  - inconsistent language and patient compliance
+  - “we’re booked out” capacity constraints
+
+---
+
+## What you’ll leave with (outcomes)
+- **Soft Tissue Management Program**: protocols + roles + standards
+- **Communication System**: language patterns from first call → close → reappoint
+- **Capacity Plan**: perioblocks, triage rules, assisted hygiene fit
+- **KPI Cadence**: scorecard + weekly rhythm that sustains change
+
+---
+
+## Agenda (high level)
+### Module 1 — The modern soft tissue program
+- diagnosis standards + protocol consistency
+- evidence-based, patient-first framing
+
+### Module 2 — Language patterns that drive compliance
+- front desk → hygiene → doctor exam → close → reappoint
+- scripts that feel human (not salesy)
+
+### Module 3 — Perio capacity in the real world
+- why “diagnose more perio” breaks schedules
+- scheduling architecture + triage rules
+- assisted hygiene: when it fits and how to implement
+
+### Module 4 — Accountability that sticks
+- weekly scorecard
+- role ownership + meeting cadence
+
+---
+
+## Ticket options
+### Individual Ticket
+- Summit seat + resources
+
+**Price**: $[INDIVIDUAL_PRICE]
+
+### Team Pass (5–15 seats)
+- team seat bundle
+- owner/leadership add-on session
+- priority Q&A
+- VIP eligibility
+
+**Price**: $[TEAM_PASS_PRICE]
+
+### VIP Practice Tracks (application-based)
+For practices that want implementation support post-Summit:
+- VIP Track A: Perio Capacity Solution Sprint (2–3 weeks)
+- VIP Track B: Soft Tissue Program Implementation (6–12 weeks)
+- VIP Track C: Fractional Hygiene Director (3–12 months)
+
+**Apply**: [VIP_APPLICATION_LINK]
+
+---
+
+## FAQ
+**Is this for insurance-based practices?**
+Yes—but we don’t let insurance dictate care. We teach patient-first, evidence-based communication.
+
+**Do we need to bring data?**
+Not required for Summit. VIP Tracks use de-identified/aggregated KPIs.
+
+**Where/when is it?**
+Date: [DATE]
+City: [CITY]
+Venue: [VENUE]
+
+---
+
+## Final CTA
+Bring your team. Attend Thrive Summit. Leave with a program your practice can actually run.
+` },
+            { file: "41-VIP-Application-Form.md", title: "VIP Application Form", md: `# VIP Practice Track Application (copy/paste into Typeform/Google Form)
+
+## Section 1 — Contact + practice
+1) Name
+2) Email
+3) Phone
+4) Role
+5) Practice name
+6) City/State
+7) Practice type (GP/Perio/DSO/Other)
+8) Number of operatories
+9) Number of hygienists
+10) Weeks hygiene is booked out
+
+## Section 2 — Primary constraint (routing)
+11) What is your #1 constraint right now?
+- Capacity (booked out / can’t fit perio)
+- Patient acceptance / communication
+- Protocol inconsistency
+- Turnover / onboarding
+- Other
+
+## Section 3 — Quick KPI snapshot (aggregated)
+12) Estimated % of patient base with soft tissue disease (if unknown, estimate)
+13) Current perio diagnosis % (estimate ok)
+14) Current perio treatment started % (of diagnosed)
+15) Pre-appoint %
+16) Re-care kept %
+17) Outstanding treatment plan close rate % (if known)
+18) Do you currently schedule perioblocks?
+- Yes / No
+
+If yes: how many/week?
+
+## Section 4 — What you’ve tried
+19) What have you tried to solve this?
+20) What worked?
+21) What didn’t?
+
+## Section 5 — Desired outcome
+22) In 60 days, what would make this a clear win? (pick up to 3)
+- Increase perio diagnosis %
+- Increase perio delivery/treatment started
+- Reduce weeks booked out
+- Increase perioblock utilization
+- Improve pre-appoint
+- Improve re-care kept
+- Improve treatment plan close rate
+- Improve team consistency
+
+## Section 6 — Fit + commitment
+23) Are you attending via Individual or Team Pass?
+24) Who will be the internal point person for implementation?
+25) Can leadership commit to a weekly KPI cadence for 8 weeks?
+- Yes / No
+
+## Section 7 — Track preference (optional)
+26) Which VIP Track are you most interested in?
+- Track A: Perio Capacity Solution Sprint
+- Track B: Implementation
+- Track C: Fractional
+- Not sure
+
+## Section 8 — Final
+27) Anything else we should know?
+28) Best times for a 30-min VIP Fit Call
+
+## Internal routing notes (not shown to applicants)
+- If “Capacity” + weeks booked out high → route to Track A
+- If “Protocol inconsistency/acceptance” → route to Track B
+- If wants ongoing oversight + leadership buy-in → Track C
+` },
+            { file: "42-Summit-Run-of-Show.md", title: "Summit Run of Show", md: `# Thrive Summit — Run of Show (template)
+
+Replace times to match your venue. This is structured to maximize:
+- attendee outcomes
+- VIP applications
+- booked owner strategy sessions
+- sponsor satisfaction
+
+## Day 1 (example)
+### 08:00–09:00 — Check-in + sponsor hall open
+- QR check-in
+- QR: resources opt-in
+- QR: VIP application
+
+### 09:00–09:15 — Welcome + outcomes
+- Set expectation: “This is about building a deliverable program.”
+- 30-sec CTA: scan QR for resources; VIP application for implementation support
+
+### 09:15–10:30 — Module 1: Modern soft tissue program
+- diagnosis standards
+- protocol consistency
+
+### 10:30–10:50 — Break + sponsor hall
+
+### 10:50–12:00 — Module 2: Language patterns + compliance
+- workshop + role play
+
+### 12:00–13:00 — Lunch + sponsor activations
+
+### 13:00–14:15 — Module 3: Capacity in the real world
+- perioblocks
+- triage rules
+- assisted hygiene fit
+
+### 14:15–14:35 — Break + “Owner Strategy Session” booking push
+- announce limited slots
+- point to booking link
+
+### 14:35–15:30 — Module 4: Accountability that sticks
+- weekly scorecard
+- ownership + cadence
+
+### 15:30–16:00 — Q&A + VIP framing
+- clarify Tracks A/B/C
+- deadline/next cohort start dates (if applicable)
+
+### 16:00–17:00 — Optional: Owner/leadership breakout (Team Pass only)
+- commitments + 30/60 plan
+- book VIP Fit Calls
+
+## Sponsor deliverables checklist (Day of)
+- booth/table placement
+- logo signage
+- stage mention time
+- opt-in lead capture path confirmed
+- post-event report expectations aligned
+` },
+            { file: "43-Sponsor-Inventory-and-Rates.md", title: "Sponsor Inventory + Rates", md: `# Summit Sponsor Inventory + Rates (fill in)
+
+This is the “menu” so sponsors can say yes quickly, and you can control scarcity.
+
+## Event basics
+- Summit date: [DATE]
+- City/venue: [CITY / VENUE]
+- Attendee count (cap): [CAP]
+
+## Inventory
+### Title / Presenting sponsor (1)
+- Includes: top logo placement + opening stage mention + largest booth/table + optional session intro
+- Rate: $[RATE]
+
+### Category sponsors (up to 3–5)
+- Category examples: air polishing, perio products, imaging, software
+- Includes: booth/table + podium slide integration + 1 stage mention
+- Rate: $[RATE]
+
+### Booth/Table sponsors (up to [N])
+- Includes: booth/table + logo on signage
+- Rate: $[RATE]
+
+### Lanyard / badge sponsor (1)
+- Rate: $[RATE]
+
+### Coffee / lunch sponsor (1–2)
+- Rate: $[RATE]
+
+### Swag bag / sampling (up to [N])
+- Includes: sample insert + QR offer
+- Rate: $[RATE]
+
+## Lead capture + reporting (standard)
+- QR opt-in leads captured
+- tracked links/codes
+- post-event sponsor report within 14 days
+
+## Notes
+- Keep integrations education-first to protect trust.
+- Avoid any PHI-related tracking.
+` },
+            { file: "44-Launch-Checklist.md", title: "Launch Checklist", md: `# Thrive Summit — Launch Checklist
+
+## Phase 1: Define (T-60 to T-45)
+- Lock date + city + venue type
+- Set capacity cap
+- Finalize ticket tiers + pricing
+- Confirm VIP Tracks (A/B/C) capacity
+- Draft landing page (use \`40-Summit-Landing-Page-Copy.md\`)
+- Create VIP application form (use \`41-VIP-Application-Form.md\`)
+
+## Phase 2: Build (T-45 to T-30)
+- Publish ticket link + checkout
+- Publish VIP application link
+- Build QR codes for:
+  - resources opt-in
+  - VIP application
+  - owner strategy session booking
+- Recruit 10–20 warm practice leaders for Team Pass outreach
+- Build sponsor inventory + rates (use \`43-Sponsor-Inventory-and-Rates.md\`)
+
+## Phase 3: Sell (T-30 to T-7)
+- Daily outreach cadence:
+  - 5 owner DMs
+  - 5 owner emails
+  - 2 sponsor outreaches
+- Weekly:
+  - 1 webinar or live Q&A
+  - 1 newsletter
+  - 2 short videos
+- Track:
+  - tickets sold
+  - team passes sold
+  - VIP apps
+  - sponsor calls booked
+
+## Phase 4: Run (T-7 to event day)
+- Confirm run-of-show (use \`42-Summit-Run-of-Show.md\`)
+- Print signage + sponsor logos
+- Confirm sponsor booths + deliverables
+- Confirm check-in and QR scan stations
+- Pre-write post-event emails
+
+## Phase 5: Convert (event day to T+30)
+- Book owner strategy sessions on-site
+- Collect VIP applications
+- Send 48-hour recap
+- Start VIP Track A cohort date
+- Launch Thrive Together cohort enrollment
+- Send sponsor report within 14 days
+` },
+            { file: "LeadMagnet-SoftTissue-Scorecard.md", title: "Lead Magnet: Soft Tissue Program Scorecard", md: `# Soft Tissue Program Scorecard (Lead Magnet)
+
+**How to use**: Answer each question and score yourself. Total your points and use the results section to route to the right next step (Summit, Thrive Together, VIP Tracks).
+
+## Scoring
+- **0** = not in place / rarely true
+- **1** = sometimes / inconsistent
+- **2** = yes / consistent
+
+Max score: 40
+
+## Section A — Protocol consistency (10 points)
+1. We have a clear standard for gingivitis vs periodontitis diagnosis.
+2. Periodontal charting is performed consistently and documented.
+3. Radiographs are updated on a consistent schedule and tied to diagnosis.
+4. Our SRP/perio maintenance protocol is standardized (not provider-dependent).
+5. Our team agrees on what “soft tissue program success” looks like.
+
+## Section B — Communication + compliance (10 points)
+6. We use consistent language patterns to explain soft tissue disease.
+7. Our front desk and clinical team use aligned language (handoff is clean).
+8. Patients clearly understand why we recommend care (evidence-based, personal).
+9. We handle insurance objections without letting insurance dictate care.
+10. We have a consistent close and reappointment script for perio pathways.
+
+## Section C — Capacity + operations (10 points)
+11. We know our true hygiene capacity constraints (chair time, demand, supply).
+12. We have a perioblock strategy (how many blocks/week and why).
+13. We have triage rules (who gets what appointment, when).
+14. We have evaluated assisted hygiene (2 ops) and know if it fits.
+15. Room turnover + delegation is structured (assistants utilized well).
+
+## Section D — Accountability + metrics (10 points)
+16. We track key KPIs monthly (perio %, acceptance, pre-appoint, re-care kept).
+17. KPIs are reviewed on a predictable cadence (weekly or biweekly).
+18. KPI ownership is assigned (one person accountable per metric).
+19. We run calibration/training regularly (not just once a year).
+20. We can maintain improvements despite staff turnover.
+
+## Results (route to next step)
+- **0–14 (Foundation needed)**
+  - Next step: attend **Public Thrive Summit** (individual ticket) and/or join **Thrive Together**.
+
+- **15–27 (Program exists but inconsistent)**
+  - Next step: **Summit Team Pass** + apply for **VIP Track B (Implementation)**.
+
+- **28–34 (Strong program, capacity is the bottleneck)**
+  - Next step: **Summit Team Pass** + apply for **VIP Track A (Perio Capacity Sprint)**.
+
+- **35–40 (High-performing, want sustained accountability)**
+  - Next step: **VIP Track C (Fractional Hygiene Director)**.
+
+## CTA (for the landing page)
+Want a team-specific action plan? Bring your team to **Public Thrive Summit** and apply for a VIP Track on-site.
+` },
+            { file: "LeadMagnet-Perio-Capacity-Calculator.md", title: "Lead Magnet: Perio Capacity Calculator", md: `# Perio Capacity Calculator (Lead Magnet)
+
+This worksheet quantifies the “good problem” described in the transcripts: diagnosing and converting more perio creates demand that the schedule can’t currently deliver.
+
+## Step 1 — Inputs (fill these in)
+- **Active patients**: ______
+- **% with soft tissue disease (estimated)**: ______% (common range: 50–80%)
+- **Current perio diagnosis rate (what you actually diagnose/record)**: ______%
+- **Current perio treatment delivery rate (of diagnosed)**: ______%
+- **Current hygiene appointments available per week**: ______
+- **Average appointment minutes for perio pathway**: ______ minutes
+- **Weeks booked out for hygiene**: ______
+
+## Step 2 — Demand model (simple)
+1) **Estimated patients with disease** = Active patients × disease %
+2) **Currently diagnosed disease patients** = Active patients × current diagnosis %
+3) **Currently treated disease patients** = Currently diagnosed × treatment delivery %
+
+Write your numbers:
+- Estimated disease patients: ______
+- Diagnosed disease patients: ______
+- Treated disease patients: ______
+
+## Step 3 — What happens if you improve diagnosis
+Choose a realistic new diagnosis target (example: 10% → 25% → 40%).
+- **Target perio diagnosis rate**: ______%
+
+4) **Newly diagnosed patients** = Active patients × target diagnosis %
+5) **Delta diagnosed patients** = Newly diagnosed − currently diagnosed
+
+Write your numbers:
+- Newly diagnosed patients: ______
+- Delta diagnosed patients: ______
+
+## Step 4 — Capacity impact (appointment math)
+6) **Extra appointments required** = Delta diagnosed × visits/year per patient
+
+Use one:
+- Gingivitis pathway (example): 2–4 visits/year
+- Perio disease pathway (example): 4–6 visits/year
+
+Pick a conservative planning number:
+- **Visits/year per patient (planning)**: ______
+
+7) **Total additional appointment minutes/year** = Extra appointments × avg minutes
+8) **Additional appointments/week needed** = Extra appointments ÷ 52
+
+Write your numbers:
+- Extra appointments required/year: ______
+- Additional appointment minutes/year: ______
+- Additional appointments/week needed: ______
+
+## Step 5 — The decision (route to the right next step)
+If your “additional appointments/week needed” is:
+- **0–2**: you may solve with minor scheduling changes + language calibration (Summit + Thrive Together)
+- **3–6**: you likely need a **Perio Capacity Solution Sprint** (VIP Track A)
+- **7+**: you likely need assisted hygiene + a full program implementation + staffing strategy (VIP Track A + B)
+
+## Step 6 — Next actions (what we implement)
+- perioblock strategy (how many blocks/week, where)
+- triage rules (who gets what, when)
+- assisted hygiene feasibility (2 ops)
+- delegation + assistant utilization plan
+- language patterns to increase compliance without sounding salesy
+
+**Best next step**: attend **Public Thrive Summit** with a Team Pass and apply for VIP Track A on-site.
+` },
+        ];
+
+        function renderDeliverables() {
+            const navContainer = document.getElementById('nav-docs');
+            const indexContainer = document.getElementById('index-list');
+            const sectionsContainer = document.getElementById('doc-sections');
+
+            const indexUl = document.createElement('ul');
+            indexUl.className = "list-disc list-inside space-y-1";
+
+            deliverables.forEach((doc) => {
+                const id = slugify(doc.file.replace('.md', ''));
+
+                // nav link
+                const a = document.createElement('a');
+                a.href = `#${id}`;
+                a.className = 'nav-link';
+                a.textContent = doc.title;
+                navContainer.appendChild(a);
+
+                // index entry
+                const li = document.createElement('li');
+                li.innerHTML = `<a class="inline" href="#${id}">${doc.title}</a> <span class="note">(${doc.file})</span>`;
+                indexUl.appendChild(li);
+
+                // section
+                const section = document.createElement('section');
+                section.id = id;
+                section.innerHTML = `
+                    <h2>${doc.title}</h2>
+                    <div class="card">
+                        <div class="note mb-3">Source: <code>${doc.file}</code></div>
+                        <div class="md" id="${id}-md"></div>
+                    </div>
+                `;
+                sectionsContainer.appendChild(section);
+
+                // render markdown (sanitized)
+                const rawHtml = marked.parse(doc.md, { gfm: true, breaks: true });
+                const cleanHtml = DOMPurify.sanitize(rawHtml, { ADD_ATTR: ['target'] });
+                document.getElementById(`${id}-md`).innerHTML = cleanHtml;
+            });
+
+            indexContainer.appendChild(indexUl);
+        }
+
+        // Scrollspy (same behavior as the kickoff agenda doc)
+        function initializeScrollSpy() {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 60) current = section.getAttribute('id');
+                });
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) link.classList.add('active');
+                });
+            });
+        }
+
+        // Password Protection
+        // NOTE: These credentials are client-side only. Change them here before sharing the file.
+        const VALID_USERNAME = 'thrive';
+        const VALID_PASSWORD = 'Summit$2026!Secure#Doc';
+
+        if (sessionStorage.getItem('authenticated') === 'true') {
+            document.getElementById('login-overlay').style.display = 'none';
+            document.getElementById('main-wrapper').classList.remove('content-hidden');
+            renderDeliverables();
+            initializeScrollSpy();
+            window.addEventListener('DOMContentLoaded', function() { setTimeout(initializeMermaid, 100); });
+            if (document.readyState === 'interactive' || document.readyState === 'complete') { setTimeout(initializeMermaid, 100); }
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('error-message');
+            if (username === VALID_USERNAME && password === VALID_PASSWORD) {
+                sessionStorage.setItem('authenticated', 'true');
+                document.getElementById('login-overlay').style.display = 'none';
+                document.getElementById('main-wrapper').classList.remove('content-hidden');
+                renderDeliverables();
+                initializeScrollSpy();
+                setTimeout(initializeMermaid, 100);
+            } else {
+                errorMessage.style.display = 'block';
+                document.getElementById('password').value = '';
+                setTimeout(() => { errorMessage.style.display = 'none'; }, 3000);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() { document.getElementById('username').focus(); });
+    </script>
+</body>
+</html>
+
