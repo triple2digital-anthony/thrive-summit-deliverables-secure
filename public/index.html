@@ -9,6 +9,10 @@
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-tomorrow.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-typescript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-markup.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -33,7 +37,7 @@
         h4 { font-size: 1rem; margin-top: 0.75rem; margin-bottom: 0.35rem; color: var(--brand-primary); }
         .brand-text { color: var(--brand-primary); }
         .wrapper { display: flex; }
-        #side-nav { width: 280px; min-height: 100vh; background-color: var(--bg-light); padding: 2rem; position: fixed; border-right: 1px solid #233554; }
+        #side-nav { width: 280px; height: 100vh; overflow-y: auto; background-color: var(--bg-light); padding: 2rem; position: fixed; border-right: 1px solid #233554; }
         #main-content { margin-left: 280px; width: calc(100% - 280px); padding: 3rem 4rem; }
         #main-content > section { margin-top: 2rem; }
         #main-content > section:first-child { margin-top: 0; }
@@ -68,6 +72,13 @@
         .note { color: #a3b2d6; font-size: 0.9rem; }
         a.inline { color: var(--brand-primary); text-decoration: underline; }
 
+        /* Sidebar scrollbar styling */
+        #side-nav { scrollbar-gutter: stable; }
+        #side-nav::-webkit-scrollbar { width: 10px; }
+        #side-nav::-webkit-scrollbar-track { background: #0b1f3a; }
+        #side-nav::-webkit-scrollbar-thumb { background: #233554; border-radius: 999px; border: 2px solid #0b1f3a; }
+        #side-nav::-webkit-scrollbar-thumb:hover { background: #2f476d; }
+
         /* Markdown rendering tweaks */
         .md h1, .md h2, .md h3, .md h4 { border-bottom: none; margin-top: 0.75rem; }
         .md p { margin: 0.5rem 0; }
@@ -78,6 +89,23 @@
         .md pre { background: #ffffff12; padding: 1rem; border-radius: 0.5rem; overflow: auto; margin-top: 0.75rem; }
         .md blockquote { border-left: 3px solid var(--brand-primary); padding-left: 1rem; margin: 0.75rem 0; color: #a3b2d6; }
         .md hr { border-color: #233554; margin: 1rem 0; }
+
+        /* Embedded code examples */
+        .code-embed { background: linear-gradient(180deg, rgba(17,34,64,0.95), rgba(10,25,47,0.95)); border: 1px solid #233554; border-radius: 10px; overflow: hidden; }
+        .code-embed-header { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.65rem 0.9rem; background: rgba(10,25,47,0.65); border-bottom: 1px solid #233554; }
+        .code-embed-filename { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; color: var(--slate-light); font-size: 0.85rem; }
+        .code-embed-actions { display: flex; gap: 0.5rem; }
+        .code-embed-btn { appearance: none; border: 1px solid #233554; background: #0b1f3a; color: var(--slate-light); padding: 0.35rem 0.6rem; border-radius: 8px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s ease; }
+        .code-embed-btn:hover { border-color: var(--brand-primary); color: var(--brand-primary); transform: translateY(-1px); }
+        .code-embed pre { margin: 0; padding: 1rem; background: transparent; overflow: auto; }
+        .code-embed code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 0.9rem; }
+        /* Prism overrides for brand alignment */
+        code[class*="language-"], pre[class*="language-"] { text-shadow: none; }
+        .token.comment { color: #7aa2c7; }
+        .token.keyword { color: #7dcfff; }
+        .token.string { color: #9ece6a; }
+        .token.function { color: #bb9af7; }
+        .token.number { color: #ff9e64; }
     </style>
 </head>
 <body>
@@ -500,7 +528,14 @@ flowchart LR
                 <div class="card mt-4">
                     <h3>Example 1 — Lead capture endpoint (Next.js Route Handler)</h3>
                     <p class="note">Use for: lead magnets, QR opt-in, landing page forms (see “Capture + Qualification Flow”).</p>
-                    <pre><code>// app/api/leads/route.ts
+                    <div class="code-embed" data-copy="code">
+                        <div class="code-embed-header">
+                            <div class="code-embed-filename">app/api/leads/route.ts</div>
+                            <div class="code-embed-actions">
+                                <button class="code-embed-btn" type="button" data-copy-btn="1">Copy</button>
+                            </div>
+                        </div>
+                        <pre class="language-typescript"><code class="language-typescript">// app/api/leads/route.ts
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
@@ -524,12 +559,20 @@ export async function POST(req: Request) {
 
   return NextResponse.json({ ok: true });
 }</code></pre>
+                    </div>
                 </div>
 
                 <div class="card mt-4">
                     <h3>Example 2 — Data model (Prisma) that mirrors your CRM stages</h3>
                     <p class="note">Use for: pipeline stages from “CRM Pipeline + Stages”.</p>
-                    <pre><code>// prisma/schema.prisma
+                    <div class="code-embed" data-copy="code">
+                        <div class="code-embed-header">
+                            <div class="code-embed-filename">prisma/schema.prisma</div>
+                            <div class="code-embed-actions">
+                                <button class="code-embed-btn" type="button" data-copy-btn="1">Copy</button>
+                            </div>
+                        </div>
+                        <pre class="language-markup"><code class="language-markup">// prisma/schema.prisma
 model Lead {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -582,12 +625,20 @@ enum PracticeStage {
   CONVERTED_TO_FRACTIONAL
   ALUMNI
 }</code></pre>
+                    </div>
                 </div>
 
                 <div class="card mt-4">
                     <h3>Example 3 — VIP routing rule (capacity vs implementation vs fractional)</h3>
                     <p class="note">Use for: mapping “Qualification Flow” → VIP Track A/B/C and creating tasks in CRM.</p>
-                    <pre><code>// lib/routing.ts
+                    <div class="code-embed" data-copy="code">
+                        <div class="code-embed-header">
+                            <div class="code-embed-filename">lib/routing.ts</div>
+                            <div class="code-embed-actions">
+                                <button class="code-embed-btn" type="button" data-copy-btn="1">Copy</button>
+                            </div>
+                        </div>
+                        <pre class="language-typescript"><code class="language-typescript">// lib/routing.ts
 export type Constraint = "capacity" | "acceptance" | "protocols" | "accountability" | "unknown";
 export type VipTrack = "TRACK_A_CAPACITY_SPRINT" | "TRACK_B_IMPLEMENTATION" | "TRACK_C_FRACTIONAL" | "THRIVE_TOGETHER";
 
@@ -602,6 +653,7 @@ export function recommendVipTrack(input: {
   if ((input.weeksBookedOut ?? 0) >= 6) return "TRACK_A_CAPACITY_SPRINT";
   return "THRIVE_TOGETHER";
 }</code></pre>
+                    </div>
                 </div>
 
                 <div class="card mt-4">
@@ -2220,6 +2272,40 @@ If your “additional appointments/week needed” is:
             });
         }
 
+        function initializeCodeEmbeds() {
+            // Syntax highlight (if Prism loaded)
+            try { if (window.Prism && Prism.highlightAll) Prism.highlightAll(); } catch (e) { /* no-op */ }
+
+            // Copy buttons
+            document.querySelectorAll('[data-copy="code"]').forEach((wrap) => {
+                const btn = wrap.querySelector('[data-copy-btn="1"]');
+                const codeEl = wrap.querySelector('code');
+                if (!btn || !codeEl) return;
+
+                btn.addEventListener('click', async () => {
+                    const text = codeEl.textContent || '';
+                    try {
+                        await navigator.clipboard.writeText(text);
+                        btn.textContent = 'Copied';
+                        setTimeout(() => { btn.textContent = 'Copy'; }, 1200);
+                    } catch (err) {
+                        // Fallback for older browsers
+                        const ta = document.createElement('textarea');
+                        ta.value = text;
+                        ta.style.position = 'fixed';
+                        ta.style.left = '-9999px';
+                        document.body.appendChild(ta);
+                        ta.focus();
+                        ta.select();
+                        try { document.execCommand('copy'); } catch (e) { /* no-op */ }
+                        document.body.removeChild(ta);
+                        btn.textContent = 'Copied';
+                        setTimeout(() => { btn.textContent = 'Copy'; }, 1200);
+                    }
+                });
+            });
+        }
+
         // Password Protection
         // NOTE: These credentials are client-side only. Change them here before sharing the file.
         const VALID_USERNAME = 'thrive';
@@ -2230,6 +2316,7 @@ If your “additional appointments/week needed” is:
             document.getElementById('main-wrapper').classList.remove('content-hidden');
             renderDeliverables();
             initializeScrollSpy();
+            initializeCodeEmbeds();
             window.addEventListener('DOMContentLoaded', function() { setTimeout(initializeMermaid, 100); });
             if (document.readyState === 'interactive' || document.readyState === 'complete') { setTimeout(initializeMermaid, 100); }
         }
@@ -2245,6 +2332,7 @@ If your “additional appointments/week needed” is:
                 document.getElementById('main-wrapper').classList.remove('content-hidden');
                 renderDeliverables();
                 initializeScrollSpy();
+                initializeCodeEmbeds();
                 setTimeout(initializeMermaid, 100);
             } else {
                 errorMessage.style.display = 'block';
